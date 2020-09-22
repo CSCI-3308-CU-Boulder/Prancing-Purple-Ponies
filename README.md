@@ -1,9 +1,9 @@
 Project Team Members:
-Paolo Castro
-Randy Perecman - October 12
-Hyden Polikoff
+
 Nathan Straub
+Paolo Castro
+Randy Perecman
+Hyden Polikoff
 Sung Kim
 Thomas Deaner
 
-Correct the changes made by Randy
