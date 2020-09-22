@@ -5,3 +5,5 @@ Hyden Polikoff
 Nathan Straub
 Sung Kim
 Thomas Deaner
+
+Correct the changes made by Randy
