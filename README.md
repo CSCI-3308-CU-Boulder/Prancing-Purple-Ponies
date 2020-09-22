@@ -1,5 +1,4 @@
-Project Team Members:
-
+Team Members of PP:
 Nathan Straub
 Paolo Castro
 Randy Perecman
