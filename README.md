@@ -1,4 +1,4 @@
-Project Team Members:
+Team Members of PP:
 Paolo Castro
 Randy Perecman
 Hyden Polikoff
