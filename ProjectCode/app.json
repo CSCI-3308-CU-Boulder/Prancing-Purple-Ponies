@@ -1,0 +1,12 @@
+{
+  "name": "ProjectCode",
+  "displayName": "ProjectCode",
+  "expo": {
+    "name": "ProjectCode",
+    "slug": "ProjectCode",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
