@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 
 
 // export a function to render the card
-export default function Event(info) {
+export default function Event(data) {
     // return the view
     return(
         // create parent view
@@ -12,14 +12,14 @@ export default function Event(info) {
         
             {/* title text */}
             <Text style={styles.event_title}>
-                Pickup {info.sport}!
+                Pickup {data.sport}!
             </Text>
 
             {/* Location of event */}
             <View style={styles.informationFields} > 
                 <Image source={require('./images/event_location.png')} style={{marginRight: 5}}/>
                 <Text>
-                   {info.location} 
+                   {data.location}
                 </Text>
             </View>
 
@@ -27,7 +27,7 @@ export default function Event(info) {
             <View style={styles.informationFields}> 
                 <Image source={require('./images/event_time.png')} style={{marginRight: 5}}/>
                 <Text>
-                   {info.time} 
+                   {data.time}
                 </Text>
             </View>
             
