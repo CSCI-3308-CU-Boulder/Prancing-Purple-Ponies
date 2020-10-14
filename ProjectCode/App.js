@@ -1,18 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { LogBox } from 'react-native';
 import MainFeed from "./src/views/MainFeed";
+import Navigation from "./src/utility/navigation";
 
+
+LogBox.ignoreLogs(["Setting a timer"]);
 
 export default function App() {
-    return MainFeed();
+    return (
+        <Navigation startOn={MainFeed}/>
+    );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

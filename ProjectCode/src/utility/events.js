@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 
 
+let event_id = 0;
 
 // export a function to render the card
 export default function Event(data) {
+    event_id++;
     // return the view
     return(
         // create parent view
@@ -17,7 +19,7 @@ export default function Event(data) {
 
             {/* Location of event */}
             <View style={styles.informationFields} > 
-                <Image source={require('./images/event_location.png')} style={{marginRight: 5}}/>
+                <Image source={require('../../assets/images/event_location.png')} style={{marginRight: 5}}/>
                 <Text>
                    {data.location}
                 </Text>
@@ -25,7 +27,7 @@ export default function Event(data) {
 
             {/* Time of the event */}
             <View style={styles.informationFields}> 
-                <Image source={require('./images/event_time.png')} style={{marginRight: 5}}/>
+                <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
                 <Text>
                    {data.time}
                 </Text>
