@@ -7,7 +7,7 @@ import {forEachEntry, addEntry, auth} from "../utility/database";
 // import the external styles sheet
 import styles from "../../assets/styles"
 // import the event function from events
-import Event from '../../assets/events.js'
+import Event from '../../assets/events'
 
 
 async function getEvents() {
