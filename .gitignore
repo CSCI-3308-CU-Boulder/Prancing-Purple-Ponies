@@ -26,6 +26,7 @@ project.xcworkspace
 #
 build/
 ios/
+android/
 .idea
 .gradle
 local.properties
