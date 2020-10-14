@@ -2,11 +2,17 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Button, Alert,Modal } from 'react-native';
 import CreateEvent from './createEvent'
+import {forEachEntry, addEntry, auth} from "./firebase";
 
 export default function App() {
     const[modalOpen, setModalOpen] = useState(false);
     const addSport = (meetingInfo) => {
-        //some code here to pass to firebase
+        // Write to firebase
+        addEntry("event", {
+          sport: meetingInfo.sport,
+          location: meetingInfo.location,
+          time: meetingInfo.time
+        });
         setModalOpen(false);
     }
     return (
