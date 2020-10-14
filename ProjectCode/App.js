@@ -1,12 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, Button, Alert,Modal } from 'react-native';
+import CreateEvent from './createEvent'
 
 export default function App() {
-  return (
+    const[modalOpen, setModalOpen] = useState(false);
+    const addSport = (meetingInfo) => {
+        //some code here to pass to firebase
+        setModalOpen(false);
+    }
+    return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+
+      <Modal visible = {modalOpen} animationType = 'slide'>
+          <View style = {styles.container}>
+              <Button
+                  onPress={()=> setModalOpen(false)}
+                  title="Close"
+                  color="#841584"
+                  accessibilityLabel="Close the event creater using this button"
+              />
+              <CreateEvent addSport = {addSport}/>
+          </View>
+      </Modal>
+
+      <Text style={[styles.bigfont]}>Welcome to SKO Play! </Text>
       <StatusBar style="auto" />
+      <Button
+          onPress={()=> setModalOpen(true)}
+          title="Add Event"
+          color="#841584"
+          style={styles.modalToggle}
+          accessibilityLabel="Add event using this button"
+      />
+
+
+
     </View>
   );
 }
@@ -17,5 +46,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  modalToggle: {
+      marginBottom: 10,
+      borderWidth: 1,
+      borderColor: '#f2f2f2',
+      padding: 10,
+      borderRadius: 10,
+      alignSelf: 'center',
+  },
+  bigfont:{
+      fontSize:30,
   },
 });
