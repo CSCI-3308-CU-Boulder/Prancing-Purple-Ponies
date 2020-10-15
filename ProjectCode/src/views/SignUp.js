@@ -8,24 +8,28 @@ import {
   TouchableOpacity,
   Text
 } from 'react-native'
+import Login from "./Login";
 
-export default class SignUp extends React.Component {
+class SignUpComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.navigate = props.navigate;
+  }
+
   state = {
     email: '', username: '', password: '', confirm_password: ''
-  }
+  };
+
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
-  }
+  };
+
   signUp = () => 
   {
-    const { email, username, password, confirm_password } = this.state
+    const { email, username, password, confirm_password } = this.state;
     alert("Successfully Signed Up!")
-  }
+  };
 
-  navigate = () => 
-  {
-
-  }
  
   render() {
     return (
@@ -60,15 +64,21 @@ export default class SignUp extends React.Component {
           placeholderTextColor='#ABABAB'
           onChangeText={val => this.onChangeText('confirm_password', val)}
         />
-        <TouchableOpacity onPress={this.signUp}>
+        <TouchableOpacity onPress={() => this.navigate.to(Login)}>
           <Text style={styles.signup}>Sign Up</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.navigate}>
+        <TouchableOpacity onPress={() => this.navigate.to(Login)}>
           <Text style={styles.login}>Already have an account? Login</Text>
         </TouchableOpacity>
       </View>
     )
   }
+}
+
+export default function SignUp(navigate) {
+  return (
+      <SignUpComponent navigate={navigate}/>
+  )
 }
 
 const styles = StyleSheet.create({

@@ -23,7 +23,7 @@ async function getEvents() {
 }
 
 
-export default function App(navigation) {
+export default function App(navigate) {
     return (
         <View style={styles.container}>
             {/* make a new view for the header of our app*/}
@@ -46,7 +46,7 @@ export default function App(navigation) {
             {/* Add event button */}
             <View style={styles.evenButton}>
                 <TouchableOpacity
-                    onPress={() => navigation.to(ModalView)}>
+                    onPress={() => navigate.to(ModalView)}>
                     <Image source={require('../../assets/images/create_event_button.png')} />
                 </TouchableOpacity>
             </View>

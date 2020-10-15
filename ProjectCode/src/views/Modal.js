@@ -57,7 +57,7 @@ class Page extends Component {
                 />
                 <Button
                     onPress={()=> this.navigate.to(MainFeed)}
-                    title="Return to View"
+                    title="Return to Feed"
                     color="#841584"
                     style={styles.modalToggle}
                     accessibilityLabel="Add event using this button"

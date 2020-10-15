@@ -7,24 +7,28 @@ import {
   TouchableOpacity,
   Text
 } from 'react-native'
+import SignUp from "./SignUp";
+import MainFeed from "./MainFeed";
 
-export default class SignUp extends React.Component {
+class LogInComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.navigate = props.navigate;
+  }
+
   state = {
     email: '', password: ''
   };
+
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   };
+
   login = () => 
   {
-    const { email, password } = this.state
+    const { email, password } = this.state;
     alert("Successfully Logged In!")
-  }
-
-  navigate = () => 
-  {
-
-  }
+  };
  
   render() {
     return (
@@ -44,16 +48,24 @@ export default class SignUp extends React.Component {
           placeholderTextColor='#ABABAB'
           onChangeText={val => this.onChangeText('password', val)}
         />
-        <TouchableOpacity onPress={this.login}>
+        <TouchableOpacity onPress={() => this.navigate.to(MainFeed)}>
           <Text style={styles.login}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.navigate}>
+        <TouchableOpacity onPress={() => this.navigate.to(SignUp)}>
           <Text style={styles.signup}>Don't have an account? Sign Up</Text>
         </TouchableOpacity>
       </View>
     )
   }
 }
+
+
+export default function LogIn(navigate) {
+  return (
+      <LogInComponent navigate={navigate}/>
+  )
+}
+
 
 const styles = StyleSheet.create({
   input: {

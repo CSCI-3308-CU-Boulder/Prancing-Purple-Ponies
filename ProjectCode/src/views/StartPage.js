@@ -1,38 +1,29 @@
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
+import SignUp from "./SignUp";
+import LogIn from "./Login";
 
 const image = {uri: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"};
 
-export default class App extends React.Component {
-
-    signupPressed = ()=> {
-        alert("Completed Signup!")
-        //navigation.navigate('SignUp')
-    };
-
-    loginPressed = ()=> {
-        alert("Completed Login!")
-    };
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <Image
-                    source={image}
-                    style={styles.logo}
-                    resizeMode="contain"
-                >
-                </Image>
-                <TouchableOpacity style={styles.rounded} onPress={this.loginPressed}>
-                    <Text style={styles.login}>Log In</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rounded} onPress={this.signupPressed}>
-                    <Text style={styles.signup}>Sign Up</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
+export default function StartPage(navigate) {
+    return (
+        <View style={styles.container}>
+            <Image
+                source={image}
+                style={styles.logo}
+                resizeMode="contain"
+            >
+            </Image>
+            <TouchableOpacity style={styles.rounded} onPress={() => navigate.to(LogIn)}>
+                <Text style={styles.login}>Log In</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.rounded} onPress={() => navigate.to(SignUp)}>
+                <Text style={styles.signup}>Sign Up</Text>
+            </TouchableOpacity>
+        </View>
+    )
 }
+
 
 const styles = StyleSheet.create({
     logo:{
