@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { LogBox } from 'react-native';
 import MainFeed from "./src/views/MainFeed";

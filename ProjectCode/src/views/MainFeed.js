@@ -3,6 +3,7 @@ import React from 'react';
 import Async from 'react-async';
 import {Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
 import {forEachEntry, addEntry, auth} from "../utility/database";
+import ModalView from "./Modal";
 
 // import the external styles sheet
 import styles from "../styles/mainFeed"
@@ -22,7 +23,7 @@ async function getEvents() {
 }
 
 
-export default function App() {
+export default function App(navigation) {
     return (
         <View style={styles.container}>
             {/* make a new view for the header of our app*/}
@@ -44,7 +45,8 @@ export default function App() {
 
             {/* Add event button */}
             <View style={styles.evenButton}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.to(ModalView)}>
                     <Image source={require('../../assets/images/create_event_button.png')} />
                 </TouchableOpacity>
             </View>
