@@ -6,69 +6,138 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Text
+  Text,
+  Alert
 } from 'react-native'
+import Login from "./Login";
+import {addEntry, auth} from "../utility/database"
 
-export default class SignUp extends React.Component {
+
+
+class SignUpComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.navigate = props.navigate;
+  }
+
   state = {
     email: '', username: '', password: '', confirm_password: ''
-  }
+  };
+
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
-  }
-  signUp = () => 
-  {
-    const { email, username, password, confirm_password } = this.state
-    alert("Successfully Signed Up!")
+  };
+
+  //function that lets the user know that the passwords dont match
+  //displays error message on screen
+  displayErrorMessage(error){
+    Alert.alert(error);
   }
 
-  navigate = () => 
-  {
 
+
+  checkCredentials(email, username, password, confirm_password){
+    // check if email includes @colorado.edu
+    if (!email.match(/\b[A-Za-z0-9._%+-]+@colorado.edu/g)){
+      this.displayErrorMessage("Please use your @colorado.edu email.");
+      return false;
+    }
+    // check username is not blank and has certain characters
+    // regex doesn't work. W.I.P
+    /*
+    if (!username.match(/^[a-z/d]{4,20}$/i)){
+      //make sure error message fits
+      this.displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
+      return false;
+    }
+    */
+    // check passwords aren't blank
+    if (password === '' || confirm_password === ''){
+      this.displayErrorMessage("You might want a password.");
+      return false;
+    }
+    // check password equals confirm_password
+    if (password !== confirm_password){
+      this.displayErrorMessage("Passwords dont match!");
+      return false;
+    }
+
+    // check username isnt taken
+
+    return true;
   }
- 
+
+  signUp = () =>
+  {
+    const { email, username, password, confirm_password } = this.state;
+    // check passwords match, and not blank
+    if (this.checkCredentials(email, username, password, confirm_password)) {
+      auth.createUserWithEmailAndPassword(email, password).then(function (cred){
+        // Write to firebase
+        addEntry("user", {
+          email: email,
+          username: username
+        });
+        Alert.alert("Successfully Signed Up!")
+      }).catch(function (error) {
+        this.displayErrorMessage("Something went wrong.");
+      });
+      // add username to firebase
+
+    }
+
+
+  };
+
+
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder='CU Email'
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('email', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Username'
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('name', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Password'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('password', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Confirm Password'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('confirm_password', val)}
-        />
-        <TouchableOpacity onPress={this.signUp}>
-          <Text style={styles.signup}>Sign Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.navigate}>
-          <Text style={styles.login}>Already have an account? Login</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.container}>
+          <TextInput
+              style={styles.input}
+              placeholder='CU Email'
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('email', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Username'
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('name', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Password'
+              secureTextEntry={true}
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('password', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Confirm Password'
+              secureTextEntry={true}
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('confirm_password', val)}
+          />
+          <TouchableOpacity onPress={() => this.signUp()}>
+            <Text style={styles.signup}>Sign Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.navigate.to(Login)}>
+            <Text style={styles.login}>Already have an account? Login</Text>
+          </TouchableOpacity>
+        </View>
     )
   }
+}
+
+export default function SignUp(navigate) {
+  return (
+      <SignUpComponent navigate={navigate}/>
+  )
 }
 
 const styles = StyleSheet.create({
