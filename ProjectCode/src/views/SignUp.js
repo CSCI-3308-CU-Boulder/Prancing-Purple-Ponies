@@ -13,6 +13,11 @@ import Login from "./Login";
 import {addEntry, auth} from "../utility/database"
 
 
+//function that lets the user know that the passwords dont match
+//displays error message on screen
+function displayErrorMessage(error){
+  Alert.alert(error);
+}
 
 class SignUpComponent extends React.Component {
   constructor(props) {
@@ -28,34 +33,26 @@ class SignUpComponent extends React.Component {
     this.setState({ [key]: val })
   };
 
-  //function that lets the user know that the passwords dont match
-  //displays error message on screen
-  displayErrorMessage(error){
-    Alert.alert(error);
-  }
-
-
-
   checkCredentials(email, username, password, confirm_password){
     // check if email includes @colorado.edu
-    if (!email.match(/\b[A-Za-z0-9._%+-]+@colorado.edu/g)){
-      this.displayErrorMessage("Please use your @colorado.edu email.");
+    if (!email.match(/^[A-Za-z0-9._%+-]+@colorado.edu$/g)){
+      displayErrorMessage("Please use your @colorado.edu email.");
       return false;
     }
     // check username is not blank and has certain characters
-    if (!username.match(/^[a-z/d]{4,20}$/i)){
+    if (!username.match(/^[A-Za-z' -]{4,20}$/g)){
       //make sure error message fits
-      this.displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
+      displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
       return false;
     }
     // check passwords aren't blank
     if (password === '' || confirm_password === ''){
-      this.displayErrorMessage("You might want a password.");
+      displayErrorMessage("You might want a password.");
       return false;
     }
     // check password equals confirm_password
     if (password !== confirm_password){
-      this.displayErrorMessage("Passwords dont match!");
+      displayErrorMessage("Passwords dont match!");
       return false;
     }
 
@@ -77,7 +74,8 @@ class SignUpComponent extends React.Component {
         });
         Alert.alert("Successfully Signed Up!")
       }).catch(function (error) {
-        this.displayErrorMessage("Something went wrong.");
+        console.log(error);
+        displayErrorMessage("Something went wrong.");
       });
       // add username to firebase
 
@@ -102,7 +100,7 @@ class SignUpComponent extends React.Component {
               placeholder='Username'
               autoCapitalize="none"
               placeholderTextColor='#ABABAB'
-              onChangeText={val => this.onChangeText('name', val)}
+              onChangeText={val => this.onChangeText('username', val)}
           />
           <TextInput
               style={styles.input}
