@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { db, addEntry } from "./database";
 
 /*
 rsvpYesFormat = function(props) {
@@ -26,7 +27,7 @@ rsvpMaybeFormat = function(props) {
 
 
 // formating for when event yes rsvp exceed 1 (which is the creator)
-yesCountFormat = function(data) {
+let yesCountFormat = function(data) {
     
     if(data.rsvp_yes.length > 1) {
         return (styles.countDisplay_yes);
@@ -37,7 +38,7 @@ yesCountFormat = function(data) {
 }
 
 // formating for when event maybe rsvp exceed 1 (which is the creator)
-maybeCountFormat = function(data) {
+let maybeCountFormat = function(data) {
     
     if(data.rsvp_maybe.length > 1) {
         return (styles.countDisplay_maybe);
@@ -58,12 +59,34 @@ maybeCountFormat = function(data) {
 // }
 
 
-// export a function to render the card
-export default function Event(data) {
+function rsvp_yes(event_id) {
+    db.collection("event").doc(event_id).get().then((doc) => {
+        let data = doc.data();
+        if (data.rsvp_yes === undefined) {
+            data.rsvp_yes = [];
+        }
+        data.rsvp_yes.push("Paolo");
 
+        db.collection("event").doc(event_id).set(data).then(() => {
+            console.log("Success!");
+        }).catch((error) => {
+            console.log("Error adding data");
+        })
+
+    }).catch((error) => {
+        console.log("ERROR!")
+    })
+}
+
+
+// export a function to render the card
+export default function Event(doc) {
+
+    let data = doc.data();
     var numYes = data.rsvp_yes.length;
     var numMaybe = data.rsvp_maybe.length;
 
+    console.log(data);
     // return the view
     return(
         // create parent view
@@ -82,7 +105,7 @@ export default function Event(data) {
 
 
                         {/* RSVP Yes button */}
-                        <TouchableOpacity style={styles.rsvpButtons_Click_Yes} onPress={() => rsvp_yes()}>
+                        <TouchableOpacity style={styles.rsvpButtons_Click_Yes} onPress={() => rsvp_yes(doc.id)}>
                             <Text >YES!</Text>
                         </TouchableOpacity>
 

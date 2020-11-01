@@ -18,7 +18,8 @@ export var auth = firebase.auth();
 export async function forEachEntry(collection, func) {
     await db.collection(collection).get().then((query) => {
         query.forEach((doc) => {
-            func(doc.data());
+            console.log(doc.id);
+            func(doc);
         })
     });
 }
