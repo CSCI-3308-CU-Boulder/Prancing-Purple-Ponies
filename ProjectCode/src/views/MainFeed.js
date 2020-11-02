@@ -58,8 +58,8 @@ class MainFeed extends Component {
                     <Async.Resolved>
                         {events => (
                             <FlatList style={styles.list}
-                                      data={events}
-                                      renderItem={({item}) => Event(item)}/>
+                                data={events}
+                                renderItem={({item}) => Event(item)}/>
                         )}
                     </Async.Resolved>
                     <Async.Rejected><Text>Error!</Text></Async.Rejected>

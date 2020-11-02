@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
 
 let event_id = 0;
@@ -16,6 +16,28 @@ export default function Event(data) {
             <Text style={styles.event_title}>
                 Pickup {data.sport}!
             </Text>
+
+                {/* RSVP buttons and people  */}
+                <View style={styles.rsvpCont}>
+
+                    {/* RSVP YES and Maybe Buttons */}
+                    <View style={{flexDirection: 'row'}}>
+
+                    {/* RSVP Yes button */}
+                    <TouchableOpacity style={styles.rsvpButtons_Click_Yes}>
+                        <Text>YES!</Text>
+                    </TouchableOpacity>
+
+                    {/* RSVP Maybe Button */}
+                    <TouchableOpacity style={styles.rsvpButtons_default}>
+                        <Text>Maybe</Text>
+                    </TouchableOpacity>
+
+                    </View>
+                    {/* View to Hold counts of Yesses and  */}
+
+                </View>
+
 
             {/* Location of event */}
             <View style={styles.informationFields} > 
@@ -56,8 +78,52 @@ const styles = StyleSheet.create({
         borderColor: '#B2B2B2',
         borderRadius: 20,
     },
+    // view holding the buttons and counts of yesses and maybes
+    rsvpCont: {
+        width: "95%",
+        alignItems: 'center',
+        justifyContent: 'center',
+        // borderWidth: 2,
+        borderBottomEndRadius: 5,
+
+    },
+    // default styling of the buttons when they haven't been clicked
+    rsvpButtons_default: {
+        width: '50%',
+        margin: 5,
+        padding: 5,
+        backgroundColor: '#E5E5E5',
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    // styling for when yes is clicked
+    rsvpButtons_Click_Yes: {
+        width: '50%',
+        margin: 5,
+        padding: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+
+        // When clicked
+        fontWeight: 'bold',
+        backgroundColor: '#ccf6c8',
+    },
+    // styling for when maybe is clicked
+    rsvpButtons_Click_Maybe: {
+        // default styling
+        width: '50%',
+        margin: 5,
+        padding: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+
+        // When clicked
+        fontSize: 12,
+        fontWeight: 'bold',
+        backgroundColor: '#fafcc2',
+    },
     informationFields: {
-        // put spacing 
+        // put spacing at very top
         paddingVertical: 5,
 
         // put the icon and information in one row

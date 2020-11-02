@@ -47,9 +47,10 @@ export default StyleSheet.create({
         width: '100%',
         height: 90,
 
-        // adding border to top
+        // adding border to top and setting background color
         borderTopWidth: 2,
         borderColor: '#B2B2B2',
+        backgroundColor: 'white',
         
         // alignment of contents
         alignItems: 'center',
