@@ -1,12 +1,69 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
+/*
+rsvpYesFormat = function(props) {
+    // check if they've rsvp'd yes or maybe
+    if(props.user == somethingelse) {
+        return (styles.rsvpButtons_Click_Yes)
+    }
+    else {
+        return (styles.rsvpButtons_default)
+    }
+}
 
-let event_id = 0;
+rsvpMaybeFormat = function(props) {
+
+    // check if they've rsvp'd yes or maybe
+    if(props.user == somethingelse) {
+        return (styles.rsvpButtons_Click_Maybe)
+    }
+    else {
+        return (styles.rsvpButtons_default)
+    }
+}
+*/
+
+
+// formating for when event yes rsvp exceed 1 (which is the creator)
+yesCountFormat = function(data) {
+    
+    if(data.rsvp_yes.length > 1) {
+        return (styles.countDisplay_yes);
+    }
+    else {
+        return (styles.countDisplay);
+    }
+}
+
+// formating for when event maybe rsvp exceed 1 (which is the creator)
+maybeCountFormat = function(data) {
+    
+    if(data.rsvp_maybe.length > 1) {
+        return (styles.countDisplay_maybe);
+    }
+    else {
+        return (styles.countDisplay);
+    }
+}
+
+// rsvp_yes = function() {
+
+
+// }
+
+// rsvp_maybe = function() {
+    
+
+// }
+
 
 // export a function to render the card
 export default function Event(data) {
-    event_id++;
+
+    var numYes = data.rsvp_yes.length;
+    var numMaybe = data.rsvp_maybe.length;
+
     // return the view
     return(
         // create parent view
@@ -20,24 +77,40 @@ export default function Event(data) {
                 {/* RSVP buttons and people  */}
                 <View style={styles.rsvpCont}>
 
-                    {/* RSVP YES and Maybe Buttons */}
+                    {/* RSVP YES and Maybe Buttons and counts */}
                     <View style={{flexDirection: 'row'}}>
 
-                    {/* RSVP Yes button */}
-                    <TouchableOpacity style={styles.rsvpButtons_Click_Yes}>
-                        <Text>YES!</Text>
-                    </TouchableOpacity>
 
-                    {/* RSVP Maybe Button */}
-                    <TouchableOpacity style={styles.rsvpButtons_default}>
-                        <Text>Maybe</Text>
-                    </TouchableOpacity>
+                        {/* RSVP Yes button */}
+                        <TouchableOpacity style={styles.rsvpButtons_Click_Yes} onPress={() => rsvp_yes()}>
+                            <Text >YES!</Text>
+                        </TouchableOpacity>
+
+                        {/* Displaying the number of Yes RSVP's */}
+                        <View style={yesCountFormat(data)}>
+
+                            <Text style={{fontWeight: 'bold'}}> {numYes} </Text>
+
+                        </View>
+
+
+
+                        {/* RSVP Maybe Button */}
+                        <TouchableOpacity style={styles.rsvpButtons_default} onPress={() => rsvp_maybe()}>
+                            <Text>Maybe</Text>
+                        </TouchableOpacity>
+
+                        {/* Displaying the number of Maybe RSVP's */}
+                        <View style={maybeCountFormat(data)}>
+
+                            <Text style={{fontWeight: 'bold'}}> {numMaybe} </Text>
+
+                        </View>
+                        
 
                     </View>
-                    {/* View to Hold counts of Yesses and  */}
-
+                    
                 </View>
-
 
             {/* Location of event */}
             <View style={styles.informationFields} > 
@@ -80,16 +153,18 @@ const styles = StyleSheet.create({
     },
     // view holding the buttons and counts of yesses and maybes
     rsvpCont: {
-        width: "95%",
+        width: "auto",
         alignItems: 'center',
         justifyContent: 'center',
-        // borderWidth: 2,
+        marginLeft: 8,
+        marginRight: 8,
+        marginBottom: 8,
         borderBottomEndRadius: 5,
 
     },
     // default styling of the buttons when they haven't been clicked
     rsvpButtons_default: {
-        width: '50%',
+        width: '40%',
         margin: 5,
         padding: 5,
         backgroundColor: '#E5E5E5',
@@ -98,7 +173,7 @@ const styles = StyleSheet.create({
     },
     // styling for when yes is clicked
     rsvpButtons_Click_Yes: {
-        width: '50%',
+        width: '40%',
         margin: 5,
         padding: 5,
         borderRadius: 5,
@@ -111,7 +186,7 @@ const styles = StyleSheet.create({
     // styling for when maybe is clicked
     rsvpButtons_Click_Maybe: {
         // default styling
-        width: '50%',
+        width: '40%',
         margin: 5,
         padding: 5,
         borderRadius: 5,
@@ -121,6 +196,54 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
         backgroundColor: '#fafcc2',
+    },
+    countDisplay: {
+        width: '10%',
+        marginRight: 10,
+        marginLeft: 1,
+        marginVertical: 5,
+        padding: 5,
+        
+        borderRadius: 5,
+        fontSize: 12,
+        fontWeight: 'bold',
+        backgroundColor: '#E5E5E5',
+
+
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    countDisplay_yes: {
+        width: '10%',
+        marginRight: 10,
+        marginLeft: 1,
+        marginVertical: 5,
+        padding: 5,
+        
+        borderRadius: 5,
+        fontSize: 12,
+        fontWeight: 'bold',
+        backgroundColor: '#ccf6c8',
+
+
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    countDisplay_maybe: {
+        width: '10%',
+        marginRight: 10,
+        marginLeft: 1,
+        marginVertical: 5,
+        padding: 5,
+        
+        borderRadius: 5,
+        fontSize: 12,
+        fontWeight: 'bold',
+        backgroundColor: '#fafcc2',
+
+
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     informationFields: {
         // put spacing at very top
