@@ -15,10 +15,11 @@ firebase.initializeApp(firebaseConfig);
 export var db = firebase.firestore();
 export var auth = firebase.auth();
 
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
 export async function forEachEntry(collection, func) {
     await db.collection(collection).get().then((query) => {
         query.forEach((doc) => {
-            console.log(doc.id);
             func(doc);
         })
     });

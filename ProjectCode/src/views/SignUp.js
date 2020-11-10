@@ -64,6 +64,7 @@ class SignUpComponent extends React.Component {
   signUp = () =>
   {
     const { email, username, password, confirm_password } = this.state;
+    let navigate = this.navigate;
     // check passwords match, and not blank
     if (this.checkCredentials(email, username, password, confirm_password)) {
       auth.createUserWithEmailAndPassword(email, password).then(function (cred){
@@ -72,10 +73,11 @@ class SignUpComponent extends React.Component {
           email: email,
           username: username
         });
+        navigate.to(Login);
         Alert.alert("Successfully Signed Up!")
       }).catch(function (error) {
         console.log(error);
-        displayErrorMessage("Something went wrong.");
+        displayErrorMessage(error.message);
       });
       // add username to firebase
 

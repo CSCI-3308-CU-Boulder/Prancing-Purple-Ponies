@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import { db, addEntry } from "./database";
+import { db, auth } from "./database";
 
 /*
 rsvpYesFormat = function(props) {
@@ -26,7 +26,7 @@ rsvpMaybeFormat = function(props) {
 */
 
 
-// formating for when event yes rsvp exceed 1 (which is the creator)
+// formatting for when event yes rsvp exceed 1 (which is the creator)
 let yesCountFormat = function(data) {
     
     if(data.rsvp_yes.length > 1) {
@@ -37,7 +37,7 @@ let yesCountFormat = function(data) {
     }
 }
 
-// formating for when event maybe rsvp exceed 1 (which is the creator)
+// formatting for when event maybe rsvp exceed 1 (which is the creator)
 let maybeCountFormat = function(data) {
     
     if(data.rsvp_maybe.length > 1) {
@@ -65,7 +65,7 @@ function rsvp_yes(event_id) {
         if (data.rsvp_yes === undefined) {
             data.rsvp_yes = [];
         }
-        data.rsvp_yes.push("Paolo");
+        data.rsvp_yes.push("Add user id here");
 
         db.collection("event").doc(event_id).set(data).then(() => {
             console.log("Success!");
@@ -74,7 +74,7 @@ function rsvp_yes(event_id) {
         })
 
     }).catch((error) => {
-        console.log("ERROR!")
+        console.log(error.message)
     })
 }
 
@@ -86,7 +86,6 @@ export default function Event(doc) {
     var numYes = data.rsvp_yes.length;
     var numMaybe = data.rsvp_maybe.length;
 
-    console.log(data);
     // return the view
     return(
         // create parent view
