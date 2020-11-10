@@ -5,10 +5,12 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Text
+  Text,
+  Alert
 } from 'react-native'
 import SignUp from "./SignUp";
 import MainFeed from "./MainFeed";
+import {auth} from "../utility/database"
 
 class LogInComponent extends React.Component {
   constructor(props) {
@@ -27,6 +29,12 @@ class LogInComponent extends React.Component {
   login = () => 
   {
     const { email, password } = this.state;
+    auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
     alert("Successfully Logged In!")
   };
  

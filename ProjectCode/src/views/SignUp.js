@@ -6,9 +6,18 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Text
+  Text,
+  Alert
 } from 'react-native'
 import Login from "./Login";
+import {addEntry, auth} from "../utility/database"
+
+
+//function that lets the user know that the passwords dont match
+//displays error message on screen
+function displayErrorMessage(error){
+  Alert.alert(error);
+}
 
 class SignUpComponent extends React.Component {
   constructor(props) {
@@ -24,53 +33,98 @@ class SignUpComponent extends React.Component {
     this.setState({ [key]: val })
   };
 
-  signUp = () => 
+  checkCredentials(email, username, password, confirm_password){
+    // check if email includes @colorado.edu
+    if (!email.match(/^[A-Za-z0-9._%+-]+@colorado.edu$/g)){
+      displayErrorMessage("Please use your @colorado.edu email.");
+      return false;
+    }
+    // check username is not blank and has certain characters
+    if (!username.match(/^[A-Za-z' -]{4,20}$/g)){
+      //make sure error message fits
+      displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
+      return false;
+    }
+    // check passwords aren't blank
+    if (password === '' || confirm_password === ''){
+      displayErrorMessage("You might want a password.");
+      return false;
+    }
+    // check password equals confirm_password
+    if (password !== confirm_password){
+      displayErrorMessage("Passwords dont match!");
+      return false;
+    }
+
+    // check username isnt taken
+
+    return true;
+  }
+
+  signUp = () =>
   {
     const { email, username, password, confirm_password } = this.state;
-    alert("Successfully Signed Up!")
+    // check passwords match, and not blank
+    if (this.checkCredentials(email, username, password, confirm_password)) {
+      auth.createUserWithEmailAndPassword(email, password).then(function (cred){
+        // Write to firebase
+        addEntry("user", {
+          email: email,
+          username: username
+        });
+        Alert.alert("Successfully Signed Up!")
+      }).catch(function (error) {
+        console.log(error);
+        displayErrorMessage("Something went wrong.");
+      });
+      // add username to firebase
+
+    }
+
+
   };
 
- 
+
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder='CU Email'
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('email', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Username'
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('name', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Password'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('password', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Confirm Password'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('confirm_password', val)}
-        />
-        <TouchableOpacity onPress={() => this.navigate.to(Login)}>
-          <Text style={styles.signup}>Sign Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.navigate.to(Login)}>
-          <Text style={styles.login}>Already have an account? Login</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.container}>
+          <TextInput
+              style={styles.input}
+              placeholder='CU Email'
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('email', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Username'
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('username', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Password'
+              secureTextEntry={true}
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('password', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Confirm Password'
+              secureTextEntry={true}
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('confirm_password', val)}
+          />
+          <TouchableOpacity onPress={() => this.signUp()}>
+            <Text style={styles.signup}>Sign Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.navigate.to(Login)}>
+            <Text style={styles.login}>Already have an account? Login</Text>
+          </TouchableOpacity>
+        </View>
     )
   }
 }
