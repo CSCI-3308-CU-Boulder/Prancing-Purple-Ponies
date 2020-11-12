@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Async from 'react-async';
 import {Text, View, Image, FlatList, TouchableOpacity, Modal, Button} from 'react-native';
-import {forEachEntry, addEntry, auth} from "../utility/database";
+import {forEachEntry, addEntry, currentUser} from "../utility/database";
 
 // import the external styles sheet
 import styles from "../styles/mainFeed"
@@ -40,9 +40,10 @@ class MainFeed extends Component {
         addEntry("event", {
             sport: meetingInfo.sport,
             location: meetingInfo.location,
-            time: meetingInfo.time
+            time: meetingInfo.time,
+            rsvp_yes: [{email: currentUser.data().email, reference: currentUser.ref}],
+            rsvp_maybe: []
         });
-        this.setModalOpen(false);
     };
 
     render() {
@@ -73,7 +74,7 @@ class MainFeed extends Component {
                             color="#841584"
                             accessibilityLabel="Close the event creater using this button"
                         />
-                        <CreateEvent addSport = {this.addSport}/>
+                        <CreateEvent addSport={this.addSport} closeModal={() => this.setModalOpen(false)}/>
                     </View>
                 </Modal>
 

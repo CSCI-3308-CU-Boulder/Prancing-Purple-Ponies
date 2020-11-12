@@ -3,13 +3,14 @@ import {StyleSheet, Button, TextInput, View, Text} from 'react-native';
 import {globalStyles} from '../styles/global.js';
 import {Formik} from 'formik';
 
-export default function CreateEvent({addSport}){
+export default function CreateEvent({addSport, closeModal}){
     return(
         <View style = {globalStyles.container}>
             <Formik
                 initialValues={{location: '', time: '', sport: ''}}
                 onSubmit={(values) =>{
                     addSport(values);
+                    closeModal(false);
                     console.log(values);
                 }}
             >

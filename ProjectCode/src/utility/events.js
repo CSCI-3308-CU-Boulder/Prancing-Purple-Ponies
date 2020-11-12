@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import { db, auth } from "./database";
+import {db, auth, currentUser} from "./database";
 
 /*
 rsvpYesFormat = function(props) {
@@ -48,24 +48,22 @@ let maybeCountFormat = function(data) {
     }
 }
 
-// rsvp_yes = function() {
 
-
-// }
-
-// rsvp_maybe = function() {
-    
-
-// }
-
-
-function rsvp_yes(event_id) {
+function rsvp(rsvp_list, event_id) {
     db.collection("event").doc(event_id).get().then((doc) => {
         let data = doc.data();
-        if (data.rsvp_yes === undefined) {
-            data.rsvp_yes = [];
+
+        if (rsvp_list === "maybe") {
+            data.rsvp_maybe.push({
+                email: currentUser.data().email,
+                reference: currentUser.ref
+            });
+        } else {
+            data.rsvp_yes.push({
+                email: currentUser.data().email,
+                reference: currentUser.ref
+            });
         }
-        data.rsvp_yes.push("Add user id here");
 
         db.collection("event").doc(event_id).set(data).then(() => {
             console.log("Success!");
@@ -104,7 +102,7 @@ export default function Event(doc) {
 
 
                         {/* RSVP Yes button */}
-                        <TouchableOpacity style={styles.rsvpButtons_Click_Yes} onPress={() => rsvp_yes(doc.id)}>
+                        <TouchableOpacity style={styles.rsvpButtons_Click_Yes} onPress={() => rsvp("yes", doc.id)}>
                             <Text >YES!</Text>
                         </TouchableOpacity>
 
@@ -118,7 +116,7 @@ export default function Event(doc) {
 
 
                         {/* RSVP Maybe Button */}
-                        <TouchableOpacity style={styles.rsvpButtons_default} onPress={() => rsvp_maybe()}>
+                        <TouchableOpacity style={styles.rsvpButtons_default} onPress={() => rsvp("maybe", doc.id)}>
                             <Text>Maybe</Text>
                         </TouchableOpacity>
 
