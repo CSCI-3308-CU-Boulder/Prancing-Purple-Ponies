@@ -3,20 +3,9 @@ import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {db, auth, currentUser} from "./database";
 
 
-rsvpYesFormat = function(data) {
+let rsvpYesFormat = function(data) {
     // check if they've rsvp'd yes or maybe
-    var userEmail = currentUser.data().email;
-    var found = false;
-    var numYes = data.rsvp_yes.length;
-    for(var i = 0; i < numYes; i++) {
-
-        if(data.rsvp_yes[i].email == userEmail) {
-            found = true;
-            break;
-        }
-    }
-
-    if(found) {
+    if(currentUserInRSVPYes(data) !== -1) {
         return (styles.rsvpButtons_Click_Yes)
     }
     else {
@@ -25,29 +14,15 @@ rsvpYesFormat = function(data) {
 }
 
 
-rsvpMaybeFormat = function(data) {
-
+let rsvpMaybeFormat = function(data) {
     // check if they've rsvp'd yes or maybe
-    var userEmail = currentUser.data().email;
-    var found = false;
-    var numYes = data.rsvp_maybe.length;
-    for(var i = 0; i < numYes; i++) {
-
-        if(data.rsvp_maybe[i].email == userEmail) {
-            found = true;
-            break;
-        }
-    }
-
-    // check if they've rsvp'd yes or maybe
-    if(found) {
+    if(currentUserInRSVPMaybe(data) !== -1) {
         return (styles.rsvpButtons_Click_Maybe)
     }
     else {
         return (styles.rsvpButtons_default)
     }
 }
-
 
 
 // formatting for when event yes rsvp exceed 1 (which is the creator)
@@ -73,21 +48,86 @@ let maybeCountFormat = function(data) {
 }
 
 
+function currentUserInRSVPYes(event_data) {
+    var userEmail = currentUser.data().email;
+    var found = -1;
+    var numYes = event_data.rsvp_yes.length;
+    for(var i = 0; i < numYes; i++) {
+
+        if(event_data.rsvp_yes[i].email === userEmail) {
+            found = i;
+            break;
+        }
+    }
+
+    return found;
+}
+
+
+function currentUserInRSVPMaybe(event_data) {
+    var userEmail = currentUser.data().email;
+    var found = -1;
+    var numYes = event_data.rsvp_maybe.length;
+    for(var i = 0; i < numYes; i++) {
+
+        if(event_data.rsvp_maybe[i].email === userEmail) {
+            found = i;
+            break;
+        }
+    }
+
+    return found;
+}
+
+
+function deleteFromRSVPYes(event_data) {
+    if (currentUserInRSVPYes(event_data) !== -1) {
+        let userIndex = currentUserInRSVPYes(event_data);
+        delete event_data.rsvp_yes.splice(userIndex, 1);
+    }
+    return event_data;
+}
+
+
+function deleteFromRSVPMaybe(event_data) {
+    if (currentUserInRSVPMaybe(event_data) !== -1) {
+        let userIndex = currentUserInRSVPMaybe(event_data);
+        delete event_data.rsvp_maybe.splice(userIndex, 1);
+    }
+    return event_data;
+}
+
+
 function rsvp(rsvp_list, event_id) {
     db.collection("event").doc(event_id).get().then((doc) => {
         let data = doc.data();
 
+        console.log(data);
+
         if (rsvp_list === "maybe") {
-            data.rsvp_maybe.push({
-                email: currentUser.data().email,
-                reference: currentUser.ref
-            });
+            // Add user to RSVP Maybe
+            if (currentUserInRSVPMaybe(data) === -1) {
+                data.rsvp_maybe.push({
+                    email: currentUser.data().email,
+                    reference: currentUser.ref
+                });
+            }
+
+            data = deleteFromRSVPYes(data);
+
         } else {
-            data.rsvp_yes.push({
-                email: currentUser.data().email,
-                reference: currentUser.ref
-            });
+            // Add user to RSVP Yes
+            if (currentUserInRSVPYes(data) === -1) {
+                data.rsvp_yes.push({
+                    email: currentUser.data().email,
+                    reference: currentUser.ref
+                });
+            }
+
+            data = deleteFromRSVPMaybe(data);
         }
+
+        console.log(data);
 
         db.collection("event").doc(event_id).set(data).then(() => {
             console.log("Success!");
