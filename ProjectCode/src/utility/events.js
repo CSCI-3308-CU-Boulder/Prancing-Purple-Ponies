@@ -2,10 +2,21 @@ import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {db, auth, currentUser} from "./database";
 
-/*
-rsvpYesFormat = function(props) {
+
+rsvpYesFormat = function(data) {
     // check if they've rsvp'd yes or maybe
-    if(props.user == somethingelse) {
+    var userEmail = currentUser.data().email;
+    var found = false;
+    var numYes = data.rsvp_yes.length;
+    for(var i = 0; i < numYes; i++) {
+
+        if(data.rsvp_yes[i].email == userEmail) {
+            found = true;
+            break;
+        }
+    }
+
+    if(found) {
         return (styles.rsvpButtons_Click_Yes)
     }
     else {
@@ -13,17 +24,30 @@ rsvpYesFormat = function(props) {
     }
 }
 
-rsvpMaybeFormat = function(props) {
+
+rsvpMaybeFormat = function(data) {
 
     // check if they've rsvp'd yes or maybe
-    if(props.user == somethingelse) {
+    var userEmail = currentUser.data().email;
+    var found = false;
+    var numYes = data.rsvp_maybe.length;
+    for(var i = 0; i < numYes; i++) {
+
+        if(data.rsvp_maybe[i].email == userEmail) {
+            found = true;
+            break;
+        }
+    }
+
+    // check if they've rsvp'd yes or maybe
+    if(found) {
         return (styles.rsvpButtons_Click_Maybe)
     }
     else {
         return (styles.rsvpButtons_default)
     }
 }
-*/
+
 
 
 // formatting for when event yes rsvp exceed 1 (which is the creator)
@@ -102,7 +126,7 @@ export default function Event(doc) {
 
 
                         {/* RSVP Yes button */}
-                        <TouchableOpacity style={styles.rsvpButtons_Click_Yes} onPress={() => rsvp("yes", doc.id)}>
+                        <TouchableOpacity style={rsvpYesFormat(data)} onPress={() => rsvp("yes", doc.id)}>
                             <Text >YES!</Text>
                         </TouchableOpacity>
 
@@ -116,7 +140,7 @@ export default function Event(doc) {
 
 
                         {/* RSVP Maybe Button */}
-                        <TouchableOpacity style={styles.rsvpButtons_default} onPress={() => rsvp("maybe", doc.id)}>
+                        <TouchableOpacity style={rsvpMaybeFormat(data)} onPress={() => rsvp("maybe", doc.id)}>
                             <Text>Maybe</Text>
                         </TouchableOpacity>
 

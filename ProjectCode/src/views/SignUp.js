@@ -127,9 +127,9 @@ class SignUpComponent extends React.Component {
 }
 
 export default function SignUp(navigate) {
-  console.log(`CURRENT USER: ${currentUser}`);
-  console.log(`CURRENT DATA: ${currentUser.data()}`);
-  console.log(`CURRENT DATA: ${currentUser.data().email}`);
+  // console.log(`CURRENT USER: ${currentUser}`);
+  // console.log(`CURRENT DATA: ${currentUser.data()}`);
+  // console.log(`CURRENT DATA: ${currentUser.data().email}`);
   return (
       <SignUpComponent navigate={navigate}/>
   )
