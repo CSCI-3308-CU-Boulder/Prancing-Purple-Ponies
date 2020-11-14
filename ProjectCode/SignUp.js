@@ -43,14 +43,11 @@ class SignUpComponent extends React.Component {
       return false;
     }
     // check username is not blank and has certain characters
-    // regex doesn't work. W.I.P
-    /*
-    if (!username.match(/^[a-z/d]{4,20}$/i)){
+    if (!username.match(/^[A-Za-z' -]{4,20}$/g)){
       //make sure error message fits
-      this.displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
+      displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
       return false;
     }
-    */
     // check passwords aren't blank
     if (password === '' || confirm_password === ''){
       this.displayErrorMessage("You might want a password.");
@@ -62,8 +59,6 @@ class SignUpComponent extends React.Component {
       return false;
     }
 
-    // check username isnt taken
-
     return true;
   }
 
@@ -74,10 +69,20 @@ class SignUpComponent extends React.Component {
     if (this.checkCredentials(email, username, password, confirm_password)) {
       auth.createUserWithEmailAndPassword(email, password).then(function (cred){
         // Write to firebase
-        addEntry("user", {
-          email: email,
-          username: username
-        });
+        // addEntry("user", {
+        //   email: email,
+        //   username: username
+        // });
+        // db.collection("user").add({
+        //  email: email,
+        //  username: username
+        // })
+        //     .then((docRef) => {
+        //       console.log("New entry in " + collection + ": " + docRef.id);
+        //     })
+        //     .catch((error) => {
+        //       console.log("Error adding entry to " + collection + ": " + error);
+        //     })
         Alert.alert("Successfully Signed Up!")
       }).catch(function (error) {
         this.displayErrorMessage("Something went wrong.");

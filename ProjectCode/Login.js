@@ -69,29 +69,29 @@ class LogInComponent extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder='CU Email'
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('email', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Password'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='#ABABAB'
-          onChangeText={val => this.onChangeText('password', val)}
-        />
-        <TouchableOpacity onPress={() => this.navigate.to(MainFeed)}>
-          <Text style={styles.login}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.navigate.to(SignUp)}>
-          <Text style={styles.signup}>Don't have an account? Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.container}>
+          <TextInput
+              style={styles.input}
+              placeholder='CU Email'
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('email', val)}
+          />
+          <TextInput
+              style={styles.input}
+              placeholder='Password'
+              secureTextEntry={true}
+              autoCapitalize="none"
+              placeholderTextColor='#ABABAB'
+              onChangeText={val => this.onChangeText('password', val)}
+          />
+          <TouchableOpacity onPress={() => this.navigate.to(MainFeed)}>
+            <Text style={styles.login}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.navigate.to(SignUp)}>
+            <Text style={styles.signup}>Don't have an account? Sign Up</Text>
+          </TouchableOpacity>
+        </View>
     )
   }
 }
