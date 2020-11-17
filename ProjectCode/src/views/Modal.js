@@ -36,13 +36,14 @@ class Page extends Component {
 
                 <Modal visible = {this.state.modalOpen} animationType = 'slide'>
                     <View style = {styles.container}>
+                        <CreateEvent addSport = {addSport}/>
                         <Button
                             onPress={()=> this.setModalOpen(false)}
                             title="Close"
                             color="#841584"
                             accessibilityLabel="Close the event creater using this button"
                         />
-                        <CreateEvent addSport = {addSport}/>
+
                     </View>
                 </Modal>
 
