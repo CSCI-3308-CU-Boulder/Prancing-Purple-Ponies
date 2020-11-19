@@ -76,7 +76,7 @@ export default function CreateEvent({addSport}){
                         </Picker>
 
 
-                        <Button title =  'submit' color = 'purple' onPress = {props.handleSubmit}/>
+                        <Button title =  'submit' color = '#CFB87C' onPress = {props.handleSubmit}/>
                     </View>
                 )}
             </Formik>

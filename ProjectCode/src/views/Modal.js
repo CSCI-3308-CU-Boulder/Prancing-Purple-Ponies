@@ -1,10 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {Component} from 'react';
+import {useState} from 'react';
 import { StyleSheet, Text, View, Button, Alert,Modal } from 'react-native';
 import CreateEvent from './createEvent'
 import {forEachEntry, addEntry, auth} from "../utility/database";
 import MainFeed from "./MainFeed";
-
+import {Formik} from 'formik';
+import {globalStyles} from '../styles/global.js';
+import DatePicker from 'react-native-datepicker';
 
 class Page extends Component {
     constructor(props) {
@@ -32,6 +35,7 @@ class Page extends Component {
         };
 
         return (
+
             <View style={styles.container}>
 
                 <Modal visible = {this.state.modalOpen} animationType = 'slide'>
@@ -39,8 +43,8 @@ class Page extends Component {
                         <CreateEvent addSport = {addSport}/>
                         <Button
                             onPress={()=> this.setModalOpen(false)}
-                            title="Close"
-                            color="#841584"
+                            title="Cancel"
+                            color="#e63b2c"
                             accessibilityLabel="Close the event creater using this button"
                         />
 
@@ -52,14 +56,14 @@ class Page extends Component {
                 <Button
                     onPress={()=> this.setModalOpen(true)}
                     title="Add Event"
-                    color="#841584"
+                    color="#CFB87C"
                     style={styles.modalToggle}
                     accessibilityLabel="Add event using this button"
                 />
                 <Button
                     onPress={()=> this.navigate.to(MainFeed)}
                     title="Return to Feed"
-                    color="#841584"
+                    color="#e63b2c"
                     style={styles.modalToggle}
                     accessibilityLabel="Add event using this button"
                 />
