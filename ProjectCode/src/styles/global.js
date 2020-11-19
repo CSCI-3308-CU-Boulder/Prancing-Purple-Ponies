@@ -7,10 +7,19 @@ export const globalStyles = StyleSheet.create({
 
     },
     input: {
+
         borderWidth: 1,
         borderColor: '#ddd',
-        padding: 20,
+        padding: 10,
         fontSize: 20,
         borderRadius: 6,
+    },
+    bigFont: {
+        fontSize: 35,
+        color: 'grey',
+    },
+    guide:{
+        fontSize:20,
+        color: 'grey',
     }
 });
