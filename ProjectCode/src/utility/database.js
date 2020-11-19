@@ -14,11 +14,36 @@ firebase.initializeApp(firebaseConfig);
 
 export var db = firebase.firestore();
 export var auth = firebase.auth();
+export var currentUser = null;
+
+let onStateChangeFunction = null;
+
+export function onAuthChange(func) {
+    onStateChangeFunction = func;
+}
+
+auth.onAuthStateChanged(async () => {
+    if (auth.currentUser) {
+        await db.collection("user")
+            .where("email", "==", auth.currentUser.email)
+            .get().then((result) => {
+                currentUser = result.docs[0];
+        })
+    } else {
+        currentUser = null;
+    }
+
+    if (onStateChangeFunction) {
+        onStateChangeFunction(currentUser);
+    }
+})
+
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 export async function forEachEntry(collection, func) {
     await db.collection(collection).get().then((query) => {
         query.forEach((doc) => {
-            func(doc.data());
+            func(doc);
         })
     });
 }

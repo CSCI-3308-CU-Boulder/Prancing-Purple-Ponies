@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   View,
-  Button,
   TextInput,
   StyleSheet,
   TouchableOpacity,
@@ -29,13 +28,13 @@ class LogInComponent extends React.Component {
   login = () => 
   {
     const { email, password } = this.state;
-    auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+    let navigate = this.navigate;
+    auth.signInWithEmailAndPassword(email, password).then(function () {
+      navigate.to(MainFeed)
+    }).catch(function(error) {
       // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
+      Alert.alert(error.message);
     });
-    alert("Successfully Logged In!")
   };
  
   render() {
@@ -56,7 +55,7 @@ class LogInComponent extends React.Component {
           placeholderTextColor='#ABABAB'
           onChangeText={val => this.onChangeText('password', val)}
         />
-        <TouchableOpacity onPress={() => this.navigate.to(MainFeed)}>
+        <TouchableOpacity onPress={() => this.login()}>
           <Text style={styles.login}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.navigate.to(SignUp)}>

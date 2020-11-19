@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react'
 import {
   View,
-  Button,
   TextInput,
   StyleSheet,
   TouchableOpacity,
@@ -10,7 +9,8 @@ import {
   Alert
 } from 'react-native'
 import Login from "./Login";
-import {addEntry, auth} from "../utility/database"
+import MainFeed from "./MainFeed";
+import {currentUser, auth, addEntry} from "../utility/database"
 
 
 //function that lets the user know that the passwords dont match
@@ -26,21 +26,21 @@ class SignUpComponent extends React.Component {
   }
 
   state = {
-    email: '', username: '', password: '', confirm_password: ''
+    email: '', name: '', password: '', confirm_password: ''
   };
 
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   };
 
-  checkCredentials(email, username, password, confirm_password){
+  checkCredentials(email, name, password, confirm_password){
     // check if email includes @colorado.edu
     if (!email.match(/^[A-Za-z0-9._%+-]+@colorado.edu$/g)){
       displayErrorMessage("Please use your @colorado.edu email.");
       return false;
     }
     // check username is not blank and has certain characters
-    if (!username.match(/^[A-Za-z' -]{4,20}$/g)){
+    if (!name.match(/^[A-Za-z' -]{4,20}$/g)){
       //make sure error message fits
       displayErrorMessage("That username's wack. Your username can include: Letters, Numbers, . and _");
       return false;
@@ -56,28 +56,25 @@ class SignUpComponent extends React.Component {
       return false;
     }
 
-    // check username isnt taken
-
     return true;
   }
 
   signUp = () =>
   {
-    const { email, username, password, confirm_password } = this.state;
-    // check passwords match, and not blank
-    if (this.checkCredentials(email, username, password, confirm_password)) {
+    const { email, name, password, confirm_password } = this.state;
+    let navigate = this.navigate;
+
+    if (this.checkCredentials(email, name, password, confirm_password)) {
+
       auth.createUserWithEmailAndPassword(email, password).then(function (cred){
-        // Write to firebase
         addEntry("user", {
           email: email,
-          username: username
-        });
-        Alert.alert("Successfully Signed Up!")
+          name: name
+        })
+        navigate.to(MainFeed);
       }).catch(function (error) {
-        console.log(error);
-        displayErrorMessage("Something went wrong.");
+        displayErrorMessage(error.message);
       });
-      // add username to firebase
 
     }
 
@@ -97,10 +94,10 @@ class SignUpComponent extends React.Component {
           />
           <TextInput
               style={styles.input}
-              placeholder='Username'
+              placeholder='Name'
               autoCapitalize="none"
               placeholderTextColor='#ABABAB'
-              onChangeText={val => this.onChangeText('username', val)}
+              onChangeText={val => this.onChangeText('name', val)}
           />
           <TextInput
               style={styles.input}
@@ -130,6 +127,9 @@ class SignUpComponent extends React.Component {
 }
 
 export default function SignUp(navigate) {
+  // console.log(`CURRENT USER: ${currentUser}`);
+  // console.log(`CURRENT DATA: ${currentUser.data()}`);
+  // console.log(`CURRENT DATA: ${currentUser.data().email}`);
   return (
       <SignUpComponent navigate={navigate}/>
   )

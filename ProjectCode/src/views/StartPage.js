@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
 import SignUp from "./SignUp";
 import LogIn from "./Login";
+import MainFeed from "./MainFeed";
+import { auth } from "../utility/database"
 
 const image = {uri: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"};
 
@@ -14,7 +16,13 @@ export default function StartPage(navigate) {
                 resizeMode="contain"
             >
             </Image>
-            <TouchableOpacity style={styles.rounded} onPress={() => navigate.to(LogIn)}>
+            <TouchableOpacity style={styles.rounded} onPress={() => {
+                if (auth.currentUser) {
+                    navigate.to(MainFeed);
+                } else {
+                    navigate.to(LogIn);
+                }
+            }}>
                 <Text style={styles.login}>Log In</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.rounded} onPress={() => navigate.to(SignUp)}>
