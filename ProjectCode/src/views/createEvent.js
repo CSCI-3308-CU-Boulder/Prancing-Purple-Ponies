@@ -3,13 +3,18 @@ import {StyleSheet, Button, TextInput, View, Text,Picker, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import {globalStyles} from '../styles/global.js';
 import {Formik} from 'formik';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function CreateEvent({addSport, closeModal}){
     const [selectedValue, setSelectedValue] = useState("java");
     const [date, setDate] = useState('09-10-2020');
-
+    const [time, setTime] = useState('1:12 AM');
+    let timeVar = '';
+    let dateVar = '';
+    let hourVar = '';
+    let minVar = '';
+    let ampm = '';
 
 
     return(
@@ -56,10 +61,30 @@ export default function CreateEvent({addSport, closeModal}){
                                 },
                             }}
                             onDateChange={(date) =>
-                            {setDate(date);{props.setFieldValue('time',date)}}
+                            {setDate(date);dateVar = date; timeVar = dateVar +" " + hourVar +":" + minVar +" "+ ampm; props.setFieldValue('time',timeVar)}
 
                             }
                         />
+                        <Text style={globalStyles.guide}>Pick the time for the meeting </Text>
+
+                        {/*<Picker*/}
+                        {/*    style = {{height:50, width:300, color: '#A9A9A9'}}*/}
+
+                        {/*    selectedValue ={time}*/}
+                        {/*    onValueChange = {(itemValue) =>*/}
+                        {/*    {setTime(itemValue);hourVar = itemValue; timeVar = dateVar +" " + hourVar +":" + minVar +" "+ ampm; props.setFieldValue('time',timeVar)}*/}
+                        {/*    }*/}
+
+
+                        {/*>*/}
+                        {/*    <Picker.Item label="Click here to set time" value="" />*/}
+                        {/*    <Picker.Item label="12:00 pm" value="Basketball" />*/}
+                        {/*    <Picker.Item label="Baseball" value="Baseball" />*/}
+                        {/*    <Picker.Item label="Soccer" value="Soccer" />*/}
+                        {/*    <Picker.Item label="Football" value="Football" />*/}
+
+                        {/*</Picker>*/}
+
                         <Text style={globalStyles.guide}>Pick the sport of the meeting </Text>
                         <Picker
                             style = {{height:50, width:300, color: '#A9A9A9'}}
