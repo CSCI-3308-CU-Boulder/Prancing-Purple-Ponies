@@ -57,3 +57,15 @@ export async function addEntry(collection, entry) {
             console.log("Error adding entry to " + collection + ": " + error);
         })
 }
+
+export async function updateCurrentUser(newData) {
+    currentUser.ref.get().then((user) => {
+        let oldData = user.data();
+        newData = Object.assign(oldData, newData);
+        console.log(newData);
+        return currentUser.ref.set(newData);
+
+    }).catch((error) => {
+        console.log(error.message);
+    })
+}
