@@ -1,22 +1,9 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, { Component } from 'react';
 import { Button, Image, View, Platform, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { render } from 'react-dom';
-
-class SignUp extends React.Component {
-    state = {
-        name: '', major: '', favsport: ''
-    }
-    onChangeText = (key, val) => {
-        this.setState({ [key]: val })
-    }
-    signUp = () =>
-    {
-        const { name, major, favsport } = this.state
-        alert("Successfully Signed Up!")
-    }
-}
+import { uploadImage } from '../utility/database'
 
 
 class Profile extends Component {
@@ -36,14 +23,20 @@ class Profile extends Component {
     pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+            allowsEditing: false,
+            base64: true,
+            aspect: [1, 1],
+            quality: 0.3
+        }).then((image) => {
+            console.log("HERE!!")
+            console.log(image)
+            console.log("HERE!!")
+            uploadImage(image);
+        })
 
         console.log(result);
 
-        if (!result.cancelled) {
+        if (result) {
             this.setImage(result.uri);
         }
 
