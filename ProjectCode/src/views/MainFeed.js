@@ -8,6 +8,7 @@ import styles from "../styles/mainFeed"
 // import the event function from events
 import Event from '../utility/events'
 import CreateEvent from "./createEvent";
+import Profile from "./Profile";
 
 
 async function getEvents() {
@@ -91,7 +92,10 @@ class MainFeed extends Component {
 
                     <View style={{flexDirection: 'row'}}>
                         <Image style={styles.footerImg} source={require('../../assets/images/navbar_court_button.png')} />
-                        <Image style={styles.footerImg} source={require('../../assets/images/navbar_profile_button.png')} />
+                        <TouchableOpacity
+                            onPress={() => this.navigate.to(Profile)}>
+                            <Image style={styles.footerImg} source={require('../../assets/images/navbar_profile_button.png')} />
+                        </TouchableOpacity>
                     </View>
                 </View>
                 {/* <StatusBar style="auto" /> */}

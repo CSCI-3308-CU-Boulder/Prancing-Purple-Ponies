@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
-import {Image, LogBox, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, LogBox, Platform, StyleSheet, View} from 'react-native';
 import Async from 'react-async';
 import StartPage from "./src/views/StartPage";
 import MainFeed from "./src/views/MainFeed";
 import Navigation from "./src/utility/navigation";
 import {currentUser} from "./src/utility/database";
+import * as ImagePicker from "expo-image-picker";
 
 
 const logo = {uri: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"};
@@ -24,6 +25,18 @@ async function getInitialScreen() {
 
 
 export default function App() {
+
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
+
     return (
         <Async promiseFn={getInitialScreen}>
             <Async.Loading>
