@@ -29,6 +29,7 @@ export default StyleSheet.create({
         // adding padding between head and first card
         // setting with to be 95%
         paddingTop: 10,
+        marginBottom: 90,
         width: '95%',
       },
       evenButton: {

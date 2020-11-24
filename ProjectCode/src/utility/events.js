@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {db, auth, currentUser} from "./database";
+import {db, currentUser} from "./database";
 
 
 let rsvpYesFormat = function(data) {
