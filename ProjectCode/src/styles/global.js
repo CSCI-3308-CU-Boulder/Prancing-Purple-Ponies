@@ -20,6 +20,14 @@ export const globalStyles = StyleSheet.create({
     },
     guide:{
         fontSize:20,
-        color: 'grey',
-    }
+        color: '#303030',
+    },
+    errorMsg:{
+        fontSize:13,
+        color: 'red',
+    },
+    row: {
+        flex: 1,
+        flexDirection: "row"
+    },
 });

@@ -40,7 +40,12 @@ class MainFeed extends Component {
         addEntry("event", {
             sport: meetingInfo.sport,
             location: meetingInfo.location,
+            date: meetingInfo.date,
+            inform: meetingInfo.inform,
             time: meetingInfo.time,
+            hh: meetingInfo.hh,
+            mm: meetingInfo.mm,
+            ampm: meetingInfo.ampm,
             rsvp_yes: [{email: currentUser.data().email, reference: currentUser.ref}],
             rsvp_maybe: []
         });
@@ -70,9 +75,10 @@ class MainFeed extends Component {
                     <View style = {styles.container}>
                         <Button
                             onPress={()=> this.setModalOpen(false)}
-                            title="Close"
-                            color="#841584"
-                            accessibilityLabel="Close the event creater using this button"
+                            title="CANCEL"
+                            color="red"
+                            accessibilityLabel="Close the event creator using this button"
+
                         />
                         <CreateEvent addSport={this.addSport} closeModal={() => this.setModalOpen(false)}/>
                     </View>

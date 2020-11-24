@@ -208,7 +208,7 @@ export default function Event(doc) {
             <View style={styles.informationFields}> 
                 <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
                 <Text>
-                   {data.time}
+                    {data.date}, {data.hh}:{data.mm} {data.ampm}
                 </Text>
             </View>
             
