@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform, TextInput, StyleSheet, TouchableOpacity, Text, Pressable } from 'react-native';
+import { Alert, Image, View, Platform, TextInput, StyleSheet, TouchableOpacity, Text, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { render } from 'react-dom';
-import {currentUser} from "../utility/database";
+import {currentUser, updateCurrentUser} from "../utility/database";
 import Profile from "./Profile";
 
 
@@ -17,6 +17,10 @@ const image7 = {uri: "https://ih1.redbubble.net/image.503497998.4429/aps,504x498
 const image8 = {uri: "https://ih1.redbubble.net/image.594856339.8826/st,small,507x507-pad,600x600,f8f8f8.jpg"}
 const image9 = {uri: "https://ih1.redbubble.net/image.1233654268.6059/st,small,507x507-pad,600x600,f8f8f8.jpg"}
 
+function displayErrorMessage(error){
+    Alert.alert(error);
+}
+
 class EditProfilePage extends React.Component {
   constructor(props) {
     super(props);
@@ -24,17 +28,11 @@ class EditProfilePage extends React.Component {
   }
 
   state = {
-    name: '', major: '', favsport: '',
+    name: currentUser.data().name, major: currentUser.data().major, sport: currentUser.data().sport,
     image: currentUser.data().image
   }
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
-  }
-
-  submit = () => 
-  {
-    const { name, major, favsport } = this.state
-    alert("Successfully Submitted!")
   }
 
   select = (image) =>
@@ -48,6 +46,66 @@ class EditProfilePage extends React.Component {
     } else {
       return styles.image
     }
+  }
+
+  checkInput(name, major, sport){
+
+    // check name is not blank
+    if (name === ''){
+      displayErrorMessage("What's your name?");
+      return false;
+    }
+
+    // check major isn't blank
+    if (major === '') {
+      displayErrorMessage("What's your major?");
+      return false;
+    }
+
+    // check sport isn't blank
+    if (sport === ''){
+      displayErrorMessage("What's your favorite sport?");
+      return false;
+    }
+
+    return true;
+  }
+
+  getSavedData(data, which){
+    if (data === '' && which === 'name'){
+      return 'Name';
+    }
+    if (data === '' && which === 'major'){
+      return 'Major';
+    }
+    if (data === '' && which === 'sport'){
+      return 'Favorite Sport';
+    }
+    if (which === 'name'){
+      return data.name;
+    }
+    if (which === 'major'){
+      return data.major;
+    }
+    if (which === 'sport'){
+      return data.sport;
+    }
+  }
+
+  async changeProfile(component){
+
+    const { name, major, sport, image } = component.state;
+
+    if (component.checkInput(name, major, sport)){
+      await updateCurrentUser({
+        name: name,
+        major: major,
+        sport: sport,
+        image: image
+      });
+      component.navigate.to(Profile);
+    }
+
   }
 
   render() {
@@ -89,6 +147,7 @@ class EditProfilePage extends React.Component {
         <TextInput 
             style={styles.firstInput}
             placeholder='Name'
+            defaultValue={this.getSavedData(currentUser.data(), 'name')}
             autoCapitalize="none"
             placeholderTextColor='#ABABAB'
             onChangeText={val => this.onChangeText('name', val)}
@@ -96,6 +155,7 @@ class EditProfilePage extends React.Component {
           <TextInput
             style={styles.input}
             placeholder='Major'
+            defaultValue={this.getSavedData(currentUser.data(), 'major')}
             autoCapitalize="none"
             placeholderTextColor='#ABABAB'
             onChangeText={val => this.onChangeText('major', val)}
@@ -103,11 +163,12 @@ class EditProfilePage extends React.Component {
           <TextInput
             style={styles.input}
             placeholder='Favorite Sport'
+            defaultValue={this.getSavedData(currentUser.data(), 'sport')}
             autoCapitalize="none"
             placeholderTextColor='#ABABAB'
-            onChangeText={val => this.onChangeText('favsport', val)}
+            onChangeText={val => this.onChangeText('sport', val)}
           />
-          <TouchableOpacity onPress={this.submit}>
+          <TouchableOpacity onPress={()=>this.changeProfile(this)}>
             <Text style={styles.submit}>Submit</Text>
           </TouchableOpacity>
 
