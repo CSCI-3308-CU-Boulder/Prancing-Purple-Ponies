@@ -25,7 +25,7 @@ class EditProfilePage extends React.Component {
 
   state = {
     name: '', major: '', favsport: '',
-    image_uri: currentUser.data().image
+    image: currentUser.data().image
   }
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
@@ -39,11 +39,11 @@ class EditProfilePage extends React.Component {
 
   select = (image) =>
   {
-    this.setState({image_uri: image.uri})
+    this.setState({image: image.uri})
   }
 
   getImageStyle(image) {
-    if (image.uri === this.state.image_uri) {
+    if (image.uri === this.state.image) {
       return styles.chosenImage
     } else {
       return styles.image
