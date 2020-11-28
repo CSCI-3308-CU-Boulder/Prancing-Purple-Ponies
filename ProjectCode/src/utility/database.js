@@ -59,11 +59,14 @@ export async function addEntry(collection, entry) {
 }
 
 export async function updateCurrentUser(newData) {
-    currentUser.ref.get().then((user) => {
+    await currentUser.ref.get().then((user) => {
         let oldData = user.data();
         newData = Object.assign(oldData, newData);
-        console.log(newData);
-        return currentUser.ref.set(newData);
+        currentUser.ref.set(newData).then(() => {
+            currentUser.ref.get().then((user) => {
+                currentUser = user;
+            })
+        });
 
     }).catch((error) => {
         console.log(error.message);

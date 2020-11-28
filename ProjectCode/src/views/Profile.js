@@ -3,7 +3,7 @@ import React from 'react'
 import { View, Button, TextInput, StyleSheet, TouchableOpacity, TouchableHighlight, Text, Image } from 'react-native'
 import { ListItem, Avatar, ButtonGroup, Divider } from "react-native-elements";
 import EditProfile from "./EditProfile";
-import {currentUser} from "../utility/database";
+import {currentUser, updateCurrentUser} from "../utility/database";
 import MainFeed from "./MainFeed";
 
 class ProfilePage extends React.Component {
@@ -19,6 +19,7 @@ class ProfilePage extends React.Component {
   }
   active = () =>
   {
+    updateCurrentUser({test: "test"})
     // alert("Navigate to Active RSVPs")
   }
   past = () =>
