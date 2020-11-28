@@ -16,7 +16,7 @@ import EditProfile from "./EditProfile";
 import {currentUser, forEachEntry, updateCurrentUser} from "../utility/database";
 import MainFeed from "./MainFeed";
 import Async from "react-async";
-import Event, {currentUserInRSVPMaybe, currentUserInRSVPYes} from "../utility/events";
+import Event, {currentUserInRSVPMaybe, currentUserInRSVPYes, eventIsInFuture} from "../utility/events";
 
 async function getEvents() {
   let data = [];
@@ -24,7 +24,9 @@ async function getEvents() {
   await forEachEntry("event", (event) => {
     event.key = data.length.toString();
     let event_data = event.data();
-    if (currentUserInRSVPYes(event_data) !== -1 || currentUserInRSVPMaybe(event_data) !== -1) {
+
+    if ((currentUserInRSVPYes(event_data) !== -1 || currentUserInRSVPMaybe(event_data) !== -1)
+        && eventIsInFuture(event_data)) {
       data.push(event);
     }
   });

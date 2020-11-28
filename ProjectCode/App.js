@@ -9,7 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 
 
 const logo = {uri: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"};
-LogBox.ignoreLogs(["Setting a timer", "Require cycle"]);
+LogBox.ignoreLogs(["Setting a timer", "Require cycle", "componentWillReceiveProps"]);
 
 
 async function getInitialScreen() {

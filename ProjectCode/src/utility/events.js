@@ -4,6 +4,13 @@ import {db, currentUser} from "./database";
 import {Component} from "react";
 
 
+export function eventIsInFuture(data) {
+    let date_string = `${data.date} ${data.hh}:${data.mm} ${data.ampm}`;
+    let event_date = Date.parse(date_string);
+    return Date.now() < event_date;
+}
+
+
 let rsvpYesFormat = function(data) {
     // check if they've rsvp'd yes or maybe
     if(currentUserInRSVPYes(data) !== -1) {
@@ -221,19 +228,11 @@ class EventComponent extends Component {
                     </Text>
                 </View>
 
-                {/* Time of the event */}
-                <View style={styles.informationFields}>
-                    <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
-                    <Text>
-                        {this.state.data.time}
-                    </Text>
-                </View>
-
             {/* Time of the event */}
             <View style={styles.informationFields}> 
                 <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
                 <Text>
-                    {data.date}, {data.hh}:{data.mm} {data.ampm}
+                    {this.state.data.date}, {this.state.data.hh}:{this.state.data.mm} {this.state.data.ampm}
                 </Text>
             </View>
         </View>

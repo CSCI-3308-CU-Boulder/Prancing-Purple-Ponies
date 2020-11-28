@@ -6,7 +6,7 @@ import {forEachEntry, addEntry, currentUser} from "../utility/database";
 // import the external styles sheet
 import styles from "../styles/mainFeed"
 // import the event function from events
-import Event from '../utility/events'
+import Event, {eventIsInFuture} from '../utility/events'
 import CreateEvent from "./createEvent";
 import Profile from "./Profile";
 
@@ -16,7 +16,11 @@ async function getEvents() {
 
     await forEachEntry("event", (event) => {
         event.key = data.length.toString();
-        data.push(event);
+        let event_data = event.data();
+
+        if (eventIsInFuture(event_data)) {
+            data.push(event);
+        }
     });
 
     return data;
