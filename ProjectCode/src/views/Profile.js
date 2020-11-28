@@ -1,10 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react'
-import { View, Button, TextInput, StyleSheet, TouchableOpacity, TouchableHighlight, Text, Image } from 'react-native'
+import {
+  View,
+  Button,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableHighlight,
+  Text,
+  Image,
+  FlatList
+} from 'react-native'
 import { ListItem, Avatar, ButtonGroup, Divider } from "react-native-elements";
 import EditProfile from "./EditProfile";
-import {currentUser, updateCurrentUser} from "../utility/database";
+import {currentUser, forEachEntry, updateCurrentUser} from "../utility/database";
 import MainFeed from "./MainFeed";
+import Async from "react-async";
+import Event, {currentUserInRSVPMaybe, currentUserInRSVPYes} from "../utility/events";
+
+async function getEvents() {
+  let data = [];
+
+  await forEachEntry("event", (event) => {
+    event.key = data.length.toString();
+    let event_data = event.data();
+    if (currentUserInRSVPYes(event_data) !== -1 || currentUserInRSVPMaybe(event_data) !== -1) {
+      data.push(event);
+    }
+  });
+
+  return data;
+}
 
 class ProfilePage extends React.Component {
   constructor(props) {
@@ -19,7 +45,6 @@ class ProfilePage extends React.Component {
   }
   active = () =>
   {
-    updateCurrentUser({test: "test"})
     // alert("Navigate to Active RSVPs")
   }
   past = () =>
@@ -53,7 +78,7 @@ class ProfilePage extends React.Component {
           //style={styles.container}
         >
         <Avatar
-            containerStyle={{borderColor: "#20232a", borderWidth: 2, width: 110, height: 110}}
+            containerStyle={{borderColor: "#20232a", borderWidth: 2, width: 90, height: 90}}
             rounded
             showAccessory
             size="xlarge"
@@ -71,17 +96,21 @@ class ProfilePage extends React.Component {
         </TouchableOpacity>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={this.active}>
-            <Text style={styles.button}>Active RSVPs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.past}>
-            <Text style={styles.button}>Past RSVPs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.myEvents}>
-            <Text style={styles.button}>My Events</Text>
-          </TouchableOpacity>
+          <Text style={styles.button}>Upcoming Events</Text>
         </View>
-        <Divider style={{ width: "200%", marginTop: 10 }} />
+        <Divider style={{ width: "100%", marginTop: 10 }} />
+
+        <Async promiseFn={getEvents}>
+          <Async.Loading><Text>Loading...</Text></Async.Loading>
+          <Async.Resolved>
+            {events => (
+                <FlatList style={styles.wideList}
+                          data={events}
+                          renderItem={({item}) => Event(item)}/>
+            )}
+          </Async.Resolved>
+          <Async.Rejected><Text>Error!</Text></Async.Rejected>
+        </Async>
 
         {/*<View style={styles.footer}>*/}
 
@@ -103,6 +132,12 @@ export default function Profile(navigate) {
 }
 
 const styles = StyleSheet.create({
+  wideList: {
+    // adding padding between head and first card
+    // setting with to be 95%
+    paddingTop: 10,
+    width: '100%'
+  },
   footer: {
     // position at bottom
     position: 'absolute',
@@ -126,7 +161,7 @@ const styles = StyleSheet.create({
     //flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginTop: 40,
-    width: "65%"
+    width: "100%"
     //marginBottom: 30
   },
   row: {
@@ -139,9 +174,7 @@ const styles = StyleSheet.create({
     color: '#CFB87C',
     width: '100%',
     height: 20,
-    //justifyContent: 'space-evenly'
-    marginLeft: 20,
-    marginRight: 20
+    textAlign: "center"
   },
   editProfileButton: {
     backgroundColor: '#CFB87C',

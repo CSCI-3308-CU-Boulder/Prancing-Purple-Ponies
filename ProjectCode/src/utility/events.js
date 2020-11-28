@@ -49,7 +49,7 @@ let maybeCountFormat = function(data) {
 }
 
 
-function currentUserInRSVPYes(event_data) {
+export function currentUserInRSVPYes(event_data) {
     var userEmail = currentUser.data().email;
     var found = -1;
     var numYes = event_data.rsvp_yes.length;
@@ -65,7 +65,7 @@ function currentUserInRSVPYes(event_data) {
 }
 
 
-function currentUserInRSVPMaybe(event_data) {
+export function currentUserInRSVPMaybe(event_data) {
     var userEmail = currentUser.data().email;
     var found = -1;
     var numYes = event_data.rsvp_maybe.length;
@@ -103,8 +103,6 @@ async function rsvp(rsvp_list, event_id) {
     let data = {};
     await db.collection("event").doc(event_id).get().then((doc) => {
         data = doc.data();
-
-        console.log(data);
 
         if (rsvp_list === "maybe") {
             // Add user to RSVP Maybe
