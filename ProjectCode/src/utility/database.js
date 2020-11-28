@@ -69,3 +69,4 @@ export async function updateCurrentUser(newData) {
         console.log(error.message);
     })
 }
+

@@ -1,23 +1,15 @@
 import React, { useState, useEffect, Component } from 'react';
-import { Button, Image, View, Platform, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {Button, Image, View, Platform, TextInput, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { render } from 'react-dom';
+import {currentUser, updateCurrentUser} from '../utility/database';
+import MainFeed from "./MainFeed";
 
-class SignUp extends React.Component {
-    state = {
-        name: '', major: '', favsport: ''
-    }
-    onChangeText = (key, val) => {
-        this.setState({ [key]: val })
-    }
-    signUp = () =>
-    {
-        const { name, major, favsport } = this.state
-        alert("Successfully Signed Up!")
-    }
+//displays error message on screen
+function displayErrorMessage(error){
+    Alert.alert(error);
 }
-
 
 class Profile extends Component {
     constructor(props) {
@@ -28,9 +20,72 @@ class Profile extends Component {
         }
     }
 
+    onChangeText = (key, val) => {
+        this.setState({ [key]: val })
+    };
 
     setImage(image) {
         this.setState({image: image})
+    }
+
+    checkInput(name, major, sport){
+
+        // check name is not blank
+        if (name === ''){
+            displayErrorMessage("What's your name?");
+            return false;
+        }
+
+        // check major isn't blank
+        if (major === '') {
+            displayErrorMessage("What's your major?");
+            return false;
+        }
+
+        // check sport isn't blank
+        if (sport === ''){
+            displayErrorMessage("What's your favorite sport?");
+            return false;
+        }
+
+        return true;
+    }
+
+    getSavedData(data, which){
+        if (data === '' && which === 'name'){
+            return 'Name';
+        }
+        if (data === '' && which === 'major'){
+            return 'Major';
+        }
+        if (data === '' && which === 'sport'){
+            return 'Favorite Sport';
+        }
+        if (which === 'name'){
+            return data.name;
+        }
+        if (which === 'major'){
+            return data.major;
+        }
+        if (which === 'sport'){
+            return data.sport;
+        }
+    }
+
+    //make functions
+    //check out mainfeed.js for examples
+    // make sure onTouch() is inside touchableopacity
+    changeProfile = () =>
+    {
+       const { image, name, major, sport } = this.state;
+
+        if (this.checkInput(name, major, sport)){
+            updateCurrentUser({
+                name: name,
+                major: major,
+                sport: sport
+            });
+        }
     }
 
     pickImage = async () => {
@@ -56,31 +111,35 @@ class Profile extends Component {
                 {this.state.image && <Image source={{ uri: this.state.image }} style={{ width: 230, height: 250, borderRadius: 80 }} />}
                 <TextInput
                     style={styles.input}
-                    placeholder='Name'
+                    placeholder={this.getSavedData(currentUser.data(), 'name')}
                     autoCapitalize="none"
                     placeholderTextColor='#ABABAB'
                     onChangeText={val => this.onChangeText('name', val)}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder='Major'
+                    placeholder={this.getSavedData(currentUser.data(), 'major')}
                     autoCapitalize="none"
                     placeholderTextColor='#ABABAB'
                     onChangeText={val => this.onChangeText('major', val)}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder='Favorite Sport'
+                    placeholder={this.getSavedData(currentUser.data(), 'sport')}
                     autoCapitalize="none"
                     placeholderTextColor='#ABABAB'
-                    onChangeText={val => this.onChangeText('favsport', val)}
+                    onChangeText={val => this.onChangeText('sport', val)}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => this.changeProfile()}>
                     <Text style={styles.signup}>RSVP</Text>
                 </TouchableOpacity>
                 <View style={styles.footer}>
                     <View style={{flexDirection: 'row'}}>
-                        <Image style={styles.footerImg} source={require('../../assets/images/navbar_court_button.png')} />
+                        <TouchableOpacity
+                            onPress={() => this.navigate.to(MainFeed)}>
+                            <Image style={styles.footerImg} source={require('../../assets/images/navbar_court_button.png')} />
+                        </TouchableOpacity>
                         <Image style={styles.footerImg} source={require('../../assets/images/navbar_profile_button.png')} />
                     </View>
                 </View>
