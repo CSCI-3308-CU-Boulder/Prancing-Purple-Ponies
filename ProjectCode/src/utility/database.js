@@ -60,15 +60,16 @@ export async function addEntry(collection, entry) {
         })
 }
 
-export async function updateCurrentUser(newData) {
-    await currentUser.ref.get().then((user) => {
+export async function updateCurrentUser(newData, callback=null) {
+    await currentUser.ref.get().then(async (user) => {
         let oldData = user.data();
         newData = Object.assign(oldData, newData);
-        currentUser.ref.set(newData).then(() => {
-            currentUser.ref.get().then((user) => {
+        await currentUser.ref.set(newData).then(async () => {
+            await currentUser.ref.get().then((user) => {
                 currentUser = user;
             })
         });
+        callback();
 
     }).catch((error) => {
         console.log(error.message);

@@ -29,7 +29,8 @@ class EditProfilePage extends React.Component {
 
   state = {
     name: currentUser.data().name, major: currentUser.data().major, sport: currentUser.data().sport,
-    image: currentUser.data().image
+    image: currentUser.data().image,
+    submitting: false
   }
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
@@ -92,18 +93,23 @@ class EditProfilePage extends React.Component {
     }
   }
 
-  async changeProfile(component){
+  changeProfile(component){
+    if (component.state.submitting) {
+      return;
+    }
 
+    component.setState({submitting: true})
     const { name, major, sport, image } = component.state;
 
     if (component.checkInput(name, major, sport)){
-      await updateCurrentUser({
+      updateCurrentUser({
         name: name,
         major: major,
         sport: sport,
         image: image
+      }, () => {
+        component.navigate.to(Profile);
       });
-      component.navigate.to(Profile);
     }
 
   }
@@ -168,8 +174,8 @@ class EditProfilePage extends React.Component {
             placeholderTextColor='#ABABAB'
             onChangeText={val => this.onChangeText('sport', val)}
           />
-          <TouchableOpacity onPress={()=>this.changeProfile(this)}>
-            <Text style={styles.submit}>Submit</Text>
+          <TouchableOpacity onPress={() => this.changeProfile(this)}>
+            <Text style={styles.submit}>{this.state.submitting ? "Submitting..." : "Submit"}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={{justifyContent: "center", marginTop: 20}}
