@@ -22,13 +22,13 @@ export function onAuthChange(func) {
     onStateChangeFunction = func;
 }
 
-auth.onAuthStateChanged(async () => {
+export async function setCurrentUser() {
     if (auth.currentUser) {
         await db.collection("user")
             .where("email", "==", auth.currentUser.email)
             .get().then((result) => {
                 currentUser = result.docs[0];
-        })
+            })
     } else {
         currentUser = null;
     }
@@ -36,7 +36,9 @@ auth.onAuthStateChanged(async () => {
     if (onStateChangeFunction) {
         onStateChangeFunction(currentUser);
     }
-})
+}
+
+auth.onAuthStateChanged(setCurrentUser);
 
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
@@ -59,11 +61,14 @@ export async function addEntry(collection, entry) {
 }
 
 export async function updateCurrentUser(newData) {
-    currentUser.ref.get().then((user) => {
+    await currentUser.ref.get().then((user) => {
         let oldData = user.data();
         newData = Object.assign(oldData, newData);
-        console.log(newData);
-        return currentUser.ref.set(newData);
+        currentUser.ref.set(newData).then(() => {
+            currentUser.ref.get().then((user) => {
+                currentUser = user;
+            })
+        });
 
     }).catch((error) => {
         console.log(error.message);
