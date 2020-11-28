@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {db, currentUser} from "./database";
+import {Component} from "react";
 
 
 let rsvpYesFormat = function(data) {
@@ -27,8 +28,8 @@ let rsvpMaybeFormat = function(data) {
 
 // formatting for when event yes rsvp exceed 1 (which is the creator)
 let yesCountFormat = function(data) {
-    
-    if(data.rsvp_yes.length > 1) {
+
+    if(currentUserInRSVPYes(data) !== -1) {
         return (styles.countDisplay_yes);
     }
     else {
@@ -39,7 +40,7 @@ let yesCountFormat = function(data) {
 // formatting for when event maybe rsvp exceed 1 (which is the creator)
 let maybeCountFormat = function(data) {
     
-    if(data.rsvp_maybe.length > 1) {
+    if(currentUserInRSVPMaybe(data) !== -1) {
         return (styles.countDisplay_maybe);
     }
     else {
@@ -48,7 +49,7 @@ let maybeCountFormat = function(data) {
 }
 
 
-function currentUserInRSVPYes(event_data) {
+export function currentUserInRSVPYes(event_data) {
     var userEmail = currentUser.data().email;
     var found = -1;
     var numYes = event_data.rsvp_yes.length;
@@ -64,7 +65,7 @@ function currentUserInRSVPYes(event_data) {
 }
 
 
-function currentUserInRSVPMaybe(event_data) {
+export function currentUserInRSVPMaybe(event_data) {
     var userEmail = currentUser.data().email;
     var found = -1;
     var numYes = event_data.rsvp_maybe.length;
@@ -98,11 +99,10 @@ function deleteFromRSVPMaybe(event_data) {
 }
 
 
-function rsvp(rsvp_list, event_id) {
-    db.collection("event").doc(event_id).get().then((doc) => {
-        let data = doc.data();
-
-        console.log(data);
+async function rsvp(rsvp_list, event_id) {
+    let data = {};
+    await db.collection("event").doc(event_id).get().then((doc) => {
+        data = doc.data();
 
         if (rsvp_list === "maybe") {
             // Add user to RSVP Maybe
@@ -111,6 +111,8 @@ function rsvp(rsvp_list, event_id) {
                     email: currentUser.data().email,
                     reference: currentUser.ref
                 });
+            } else {
+                deleteFromRSVPMaybe(data);
             }
 
             data = deleteFromRSVPYes(data);
@@ -122,6 +124,8 @@ function rsvp(rsvp_list, event_id) {
                     email: currentUser.data().email,
                     reference: currentUser.ref
                 });
+            } else {
+                deleteFromRSVPYes(data);
             }
 
             data = deleteFromRSVPMaybe(data);
@@ -138,25 +142,36 @@ function rsvp(rsvp_list, event_id) {
     }).catch((error) => {
         console.log(error.message)
     })
+    return data;
 }
 
 
-// export a function to render the card
-export default function Event(doc) {
+class EventComponent extends Component {
+    constructor(props) {
+        super(props);
+        this.doc = props.doc
+        this.state = {data: this.doc.data()};
+    }
 
-    let data = doc.data();
-    var numYes = data.rsvp_yes.length;
-    var numMaybe = data.rsvp_maybe.length;
+    async rsvp_click(rsvp_list, event_id) {
+        let data = await rsvp(rsvp_list, event_id);
+        this.setState({data: data});
+    }
 
-    // return the view
-    return(
-        // create parent view
-        <View style={styles.listItem}>
-        
-            {/* title text */}
-            <Text style={styles.event_title}>
-                Pickup {data.sport}!
-            </Text>
+    render() {
+
+        var numYes = this.state.data.rsvp_yes.length;
+        var numMaybe = this.state.data.rsvp_maybe.length;
+
+        // return the view
+        return(
+            // create parent view
+            <View style={styles.listItem}>
+
+                {/* title text */}
+                <Text style={styles.event_title}>
+                    Pickup {this.state.data.sport}!
+                </Text>
 
                 {/* RSVP buttons and people  */}
                 <View style={styles.rsvpCont}>
@@ -166,12 +181,13 @@ export default function Event(doc) {
 
 
                         {/* RSVP Yes button */}
-                        <TouchableOpacity style={rsvpYesFormat(data)} onPress={() => rsvp("yes", doc.id)}>
+                        <TouchableOpacity style={rsvpYesFormat(this.state.data)}
+                                          onPress={() => this.rsvp_click("yes", this.doc.id)}>
                             <Text >YES!</Text>
                         </TouchableOpacity>
 
                         {/* Displaying the number of Yes RSVP's */}
-                        <View style={yesCountFormat(data)}>
+                        <View style={yesCountFormat(this.state.data)}>
 
                             <Text style={{fontWeight: 'bold'}}> {numYes} </Text>
 
@@ -180,40 +196,48 @@ export default function Event(doc) {
 
 
                         {/* RSVP Maybe Button */}
-                        <TouchableOpacity style={rsvpMaybeFormat(data)} onPress={() => rsvp("maybe", doc.id)}>
+                        <TouchableOpacity style={rsvpMaybeFormat(this.state.data)}
+                                          onPress={() => this.rsvp_click("maybe", this.doc.id)}>
                             <Text>Maybe</Text>
                         </TouchableOpacity>
 
                         {/* Displaying the number of Maybe RSVP's */}
-                        <View style={maybeCountFormat(data)}>
+                        <View style={maybeCountFormat(this.state.data)}>
 
                             <Text style={{fontWeight: 'bold'}}> {numMaybe} </Text>
 
                         </View>
-                        
+
 
                     </View>
-                    
+
                 </View>
 
-            {/* Location of event */}
-            <View style={styles.informationFields} > 
-                <Image source={require('../../assets/images/event_location.png')} style={{marginRight: 5}}/>
-                <Text>
-                   {data.location}
-                </Text>
-            </View>
+                {/* Location of event */}
+                <View style={styles.informationFields} >
+                    <Image source={require('../../assets/images/event_location.png')} style={{marginRight: 5}}/>
+                    <Text>
+                        {this.state.data.location}
+                    </Text>
+                </View>
 
-            {/* Time of the event */}
-            <View style={styles.informationFields}> 
-                <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
-                <Text>
-                   {data.time}
-                </Text>
+                {/* Time of the event */}
+                <View style={styles.informationFields}>
+                    <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
+                    <Text>
+                        {this.state.data.time}
+                    </Text>
+                </View>
+
             </View>
-            
-        </View>
-    )
+        )
+    }
+}
+
+
+// export a function to render the card
+export default function Event(doc) {
+    return <EventComponent doc={doc}/>
 }
 
 // style sheet for events
