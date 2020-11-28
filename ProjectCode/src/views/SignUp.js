@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import Login from "./Login";
 import MainFeed from "./MainFeed";
-import {currentUser, auth, addEntry} from "../utility/database"
+import {currentUser, auth, addEntry, setCurrentUser} from "../utility/database"
 
 
 //function that lets the user know that the passwords dont match
@@ -66,14 +66,15 @@ class SignUpComponent extends React.Component {
 
     if (this.checkCredentials(email, name, password, confirm_password)) {
 
-      auth.createUserWithEmailAndPassword(email, password).then(function (cred){
-        addEntry("user", {
+      auth.createUserWithEmailAndPassword(email, password).then(async function (cred){
+        await addEntry("user", {
           email: email,
           name: name,
           major: "",
           sport: "",
           image: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"
         })
+        await setCurrentUser();
         navigate.to(MainFeed);
       }).catch(function (error) {
         displayErrorMessage(error.message);
