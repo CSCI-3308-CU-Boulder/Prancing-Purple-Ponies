@@ -69,7 +69,10 @@ class SignUpComponent extends React.Component {
       auth.createUserWithEmailAndPassword(email, password).then(function (cred){
         addEntry("user", {
           email: email,
-          name: name
+          name: name,
+          major: "",
+          sport: "",
+          image: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"
         })
         navigate.to(MainFeed);
       }).catch(function (error) {

@@ -3,6 +3,9 @@ import { Button, Image, View, Platform, TextInput, StyleSheet, TouchableOpacity,
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { render } from 'react-dom';
+import {currentUser} from "../utility/database";
+import Profile from "./Profile";
+
 
 const image1 = {uri: "https://ih1.redbubble.net/image.1220742639.9615/st,small,507x507-pad,600x600,f8f8f8.jpg"}
 const image2 = {uri: "https://ih1.redbubble.net/image.594857806.8866/st,small,507x507-pad,600x600,f8f8f8.jpg"}
@@ -14,62 +17,75 @@ const image7 = {uri: "https://ih1.redbubble.net/image.503497998.4429/aps,504x498
 const image8 = {uri: "https://ih1.redbubble.net/image.594856339.8826/st,small,507x507-pad,600x600,f8f8f8.jpg"}
 const image9 = {uri: "https://ih1.redbubble.net/image.1233654268.6059/st,small,507x507-pad,600x600,f8f8f8.jpg"}
 
-export default class Profile extends React.Component {
+class EditProfilePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.navigate = props.navigate;
+  }
 
   state = {
-    name: '', major: '', favsport: ''
+    name: '', major: '', favsport: '',
+    image_uri: currentUser.data().image
   }
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   }
+
   submit = () => 
   {
     const { name, major, favsport } = this.state
     alert("Successfully Submitted!")
   }
-  select = () =>
+
+  select = (image) =>
   {
-    this.setState({borderColor: "#20232a", borderWidth: 2})
-    alert("Selected Profile Picture")
+    this.setState({image_uri: image.uri})
+  }
+
+  getImageStyle(image) {
+    if (image.uri === this.state.image_uri) {
+      return styles.chosenImage
+    } else {
+      return styles.image
+    }
   }
 
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={styles.row}>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image1} style={styles.image} />
+          <TouchableOpacity onPress={() => this.select(image1)}>
+            <Image source={image1} style={this.getImageStyle(image1)} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image2} style={styles.image} />
+          <TouchableOpacity onPress={() => this.select(image2)}>
+            <Image source={image2} style={this.getImageStyle(image2)} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image3} style={styles.image} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image4} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image5} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image6} style={styles.image} />
+          <TouchableOpacity onPress={() => this.select(image3)}>
+            <Image source={image3} style={this.getImageStyle(image3)} />
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image7} style={styles.image} />
+          <TouchableOpacity onPress={() => this.select(image4)}>
+            <Image source={image4} style={this.getImageStyle(image4)} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image8} style={styles.image} />
+          <TouchableOpacity onPress={() => this.select(image5)}>
+            <Image source={image5} style={this.getImageStyle(image5)} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.select}>
-            <Image source={image9} style={styles.image} />
+          <TouchableOpacity onPress={() => this.select(image6)}>
+            <Image source={image6} style={this.getImageStyle(image6)} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.caption}>Select one of the profile pictures above</Text>
+        <View style={styles.row}>
+          <TouchableOpacity onPress={() => this.select(image7)}>
+            <Image source={image7} style={this.getImageStyle(image7)} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.select(image8)}>
+            <Image source={image8} style={this.getImageStyle(image8)} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.select(image9)}>
+            <Image source={image9} style={this.getImageStyle(image9)} />
+          </TouchableOpacity>
+        </View>
         <TextInput 
             style={styles.firstInput}
             placeholder='Name'
@@ -94,10 +110,19 @@ export default class Profile extends React.Component {
           <TouchableOpacity onPress={this.submit}>
             <Text style={styles.submit}>Submit</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style={{justifyContent: "center", marginTop: 20}}
+                            onPress={() => this.navigate.to(Profile)}>
+            <Text>Cancel</Text>
+          </TouchableOpacity>
           
       </View>
     )
   }
+}
+
+export default function EditProfile(navigate) {
+  return <EditProfilePage navigate={navigate}/>
 }
 
 const styles = StyleSheet.create({
@@ -105,7 +130,7 @@ const styles = StyleSheet.create({
     width: 350,
     height: 55,
     backgroundColor: '#E5E5E5',
-    margin: 10,
+    margin: 5,
     padding: 8,
     color: '#ABABAB',
     borderRadius: 15,
@@ -117,14 +142,14 @@ const styles = StyleSheet.create({
     width: 350,
     height: 55,
     backgroundColor: '#E5E5E5',
-    margin: 10,
+    margin: 5,
     padding: 8,
     color: '#ABABAB',
     borderRadius: 15,
     fontSize: 18,
     fontWeight: '500',
     textAlign: 'center',
-    marginTop: 40
+    marginTop: 25
   },
   container: {
     flex: 1,
@@ -140,13 +165,22 @@ const styles = StyleSheet.create({
     width: 85, 
     height: 85, 
     borderRadius: 25,
-    marginLeft: 15,
-    marginRight: 15
+    marginLeft: 10,
+    marginRight: 10
+  },
+  chosenImage: {
+    width: 85,
+    height: 85,
+    borderRadius: 25,
+    marginLeft: 10,
+    marginRight: 10,
+    borderColor: '#CFB87C',
+    borderWidth: 2
   },
   row: {
     flexDirection: 'row',
     //marginTop: 100,
-    marginBottom: 15
+    marginBottom: 5
   },
   footer: {
     // position at bottom
