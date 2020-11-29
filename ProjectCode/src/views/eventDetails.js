@@ -124,7 +124,9 @@ function rsvp(rsvp_list, event_id) {
 // export a function to render the card
 export default function Details(doc) {
 
-    let data = doc.data();
+    // let doc = "";
+    let data = doc.doc;
+
     var numYes = data.rsvp_yes.length;
     var numMaybe = data.rsvp_maybe.length;
     var yesses = [numYes];
@@ -138,6 +140,29 @@ export default function Details(doc) {
         maybes[i] = data.rsvp_maybe[i].reference;
     }
 
+    // console.log("GOT HERE");
+    // console.log("Doc:");
+    // console.log(doc);
+    // console.log("Data:");
+    // console.log(data);
+    // console.log("Details:");
+    // console.log(data.location);
+    // console.log(data.sport);
+     console.log(data.rsvp_yes);
+     console.log(data.rsvp_maybe);
+
+    renderItem = ({ item }) => {
+      if (item.email != null) {
+        console.log("HEYYYYYY");
+        return (
+          <View>
+            <Text>
+              {item.email}
+            </Text>
+          </View>
+        )
+      }
+    }
 
     // return the view
     return(
@@ -146,8 +171,10 @@ export default function Details(doc) {
             {/* hold info about time and place */}
             <View style={styles.eventInfo}>
 
+              <Text> {data.sport} </Text>
+
                 {/* Location of event */}
-                <View style={styles.informationFields} > 
+                <View style={styles.informationFields} >
                     <Image source={require('../../assets/images/event_location.png')} style={{marginRight: 5}}/>
 
                     <Text> {data.location} </Text>
@@ -155,9 +182,9 @@ export default function Details(doc) {
                 </View>
 
                 {/* Time of the event */}
-                <View style={styles.informationFields}> 
+                <View style={styles.informationFields}>
                     <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
-                    
+
                     <Text> {data.time} </Text>
 
                 </View>
@@ -180,100 +207,19 @@ export default function Details(doc) {
             {/* List of Yesses */}
             <View>
                 <Text style={"fontWeight: 'bold', fontSize: 20"}> YES </Text>
-
                 <FlatList style={styles.list}
-                    data={yesses}
-                    renderItem={renderItem}
-                />
-
+                    data={data.rsvp_yes}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item, index) => index.toString()}/>
             </View>
             {/* List to hold Maybes */}
             <View>
                 <Text style={"fontWeight: 'bold', fontSize: 20"}> Maybe </Text>
-
                 <FlatList style={styles.list}
-                    data={maybes}
-                    renderItem={renderItem}
-                />
-
-
+                    data={data.rsvp_maybe}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item, index) => index.toString()}/>
             </View>
         </View>
     )
 }
-
-
-// create the style sheet
-const styles = StyleSheet.create({
-    modalContainer: {
-        width: '95%',
-        height: '80%',
-
-        // create shadow effect on cards
-        shadowOffset:{  width: 15,  height: 15,  },
-        shadowColor: 'black',
-        shadowOpacity: 0.15,
-        // add padding inside for text and margin between cards
-        padding: 20,
-        margin: 10,
-
-        // make background white so shadow doesn't shine through
-        backgroundColor: 'white',
-
-        // create border around the events and round corners
-        borderWidth: 2,
-        borderColor: '#B2B2B2',
-        borderRadius: 20,
-    },
-    eventInfo: {
-        height: '15%',
-        flexDirection: 'row',
-    },
-    // view holding the buttons and counts of yesses and maybes
-    rsvpCont: {
-        flexDirection: 'row',
-        width: "auto",
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginLeft: 8,
-        marginRight: 8,
-        marginBottom: 8,
-        borderBottomEndRadius: 5,
-
-    },
-    // default styling of the buttons when they haven't been clicked
-    rsvpButtons_default: {
-        width: '40%',
-        margin: 5,
-        padding: 5,
-        backgroundColor: '#E5E5E5',
-        borderRadius: 5,
-        alignItems: 'center',
-    },
-    // styling for when yes is clicked
-    rsvpButtons_Click_Yes: {
-        width: '40%',
-        margin: 5,
-        padding: 5,
-        borderRadius: 5,
-        alignItems: 'center',
-
-        // When clicked
-        fontWeight: 'bold',
-        backgroundColor: '#ccf6c8',
-    },
-    // styling for when maybe is clicked
-    rsvpButtons_Click_Maybe: {
-        // default styling
-        width: '40%',
-        margin: 5,
-        padding: 5,
-        borderRadius: 5,
-        alignItems: 'center',
-
-        // When clicked
-        fontSize: 12,
-        fontWeight: 'bold',
-        backgroundColor: '#fafcc2',
-    },
-});

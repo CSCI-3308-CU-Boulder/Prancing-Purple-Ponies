@@ -27,7 +27,7 @@ let rsvpMaybeFormat = function(data) {
 
 // formatting for when event yes rsvp exceed 1 (which is the creator)
 let yesCountFormat = function(data) {
-    
+
     if(data.rsvp_yes.length > 1) {
         return (styles.countDisplay_yes);
     }
@@ -38,7 +38,7 @@ let yesCountFormat = function(data) {
 
 // formatting for when event maybe rsvp exceed 1 (which is the creator)
 let maybeCountFormat = function(data) {
-    
+
     if(data.rsvp_maybe.length > 1) {
         return (styles.countDisplay_maybe);
     }
@@ -140,19 +140,24 @@ function rsvp(rsvp_list, event_id) {
     })
 }
 
+function onTapFunction() {
+  console.log("hey");
+}
 
 // export a function to render the card
-export default function Event(doc) {
+export default function Event(doc, onTap) {
 
     let data = doc.data();
     var numYes = data.rsvp_yes.length;
     var numMaybe = data.rsvp_maybe.length;
 
+
     // return the view
     return(
         // create parent view
-        <View style={styles.listItem}>
-        
+        <TouchableOpacity style={styles.listItem} onPress={() => onTap()}>
+
+
             {/* title text */}
             <Text style={styles.event_title}>
                 Pickup {data.sport}!
@@ -190,14 +195,14 @@ export default function Event(doc) {
                             <Text style={{fontWeight: 'bold'}}> {numMaybe} </Text>
 
                         </View>
-                        
+
 
                     </View>
-                    
+
                 </View>
 
             {/* Location of event */}
-            <View style={styles.informationFields} > 
+            <View style={styles.informationFields} >
                 <Image source={require('../../assets/images/event_location.png')} style={{marginRight: 5}}/>
                 <Text>
                    {data.location}
@@ -205,14 +210,14 @@ export default function Event(doc) {
             </View>
 
             {/* Time of the event */}
-            <View style={styles.informationFields}> 
+            <View style={styles.informationFields}>
                 <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
                 <Text>
                    {data.time}
                 </Text>
             </View>
-            
-        </View>
+
+        </TouchableOpacity>
     )
 }
 
@@ -287,7 +292,7 @@ const styles = StyleSheet.create({
         marginLeft: 1,
         marginVertical: 5,
         padding: 5,
-        
+
         borderRadius: 5,
         fontSize: 12,
         fontWeight: 'bold',
@@ -303,7 +308,7 @@ const styles = StyleSheet.create({
         marginLeft: 1,
         marginVertical: 5,
         padding: 5,
-        
+
         borderRadius: 5,
         fontSize: 12,
         fontWeight: 'bold',
@@ -319,7 +324,7 @@ const styles = StyleSheet.create({
         marginLeft: 1,
         marginVertical: 5,
         padding: 5,
-        
+
         borderRadius: 5,
         fontSize: 12,
         fontWeight: 'bold',

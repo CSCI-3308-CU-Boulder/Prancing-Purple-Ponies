@@ -8,15 +8,25 @@ import styles from "../styles/mainFeed"
 // import the event function from events
 import Event from '../utility/events'
 import CreateEvent from "./createEvent";
+import Details from "./eventDetails";
 
+
+let my_events = [];
 
 async function getEvents() {
     let data = [];
 
+    console.log("EVENTS:");
     await forEachEntry("event", (event) => {
         event.key = data.length.toString();
         data.push(event);
+        my_events.push(event.data());
+        console.log("event here:");
+        console.log(event.data());
     });
+
+    // console.log("EVENTS:");
+    // console.log(my_events);
 
     return data;
 }
@@ -27,12 +37,22 @@ class MainFeed extends Component {
         super(props);
         this.navigate = props.navigate;
         this.state = {
-            modalOpen: false
+            events: [],
+            modalOpen: false,
+            detailOpen: false,
+            selectedEvent: null
         }
     }
 
     setModalOpen(visible) {
         this.setState({modalOpen: visible})
+    }
+
+    setDetailOpen(visible, item) {
+        this.setState({detailOpen: visible});
+        // console.log("hey here it is:");
+        // console.log(item.data());
+        this.setState({selectedEvent: item.data()});
     }
 
     addSport(meetingInfo) {
@@ -60,11 +80,25 @@ class MainFeed extends Component {
                         {events => (
                             <FlatList style={styles.list}
                                 data={events}
-                                renderItem={({item}) => Event(item)}/>
+                                renderItem={({item, onTap}) => Event(item, ()=> this.setDetailOpen(true, item))}/>
                         )}
+
                     </Async.Resolved>
                     <Async.Rejected><Text>Error!</Text></Async.Rejected>
                 </Async>
+
+                <Modal visible = {this.state.detailOpen} animationType = 'slide'>
+                    <View style={{alignItems: 'flex-start', marginVertical: 40}}>
+                        <Button
+                            onPress={()=> this.setDetailOpen(false)}
+                            title="Close"
+                            color="#841584"
+                            accessibilityLabel="Close the detail view using this button"
+
+                        />
+                        <Details doc={this.state.selectedEvent}/>
+                    </View>
+                </Modal>
 
                 <Modal visible = {this.state.modalOpen} animationType = 'slide'>
                     <View style = {styles.container}>
