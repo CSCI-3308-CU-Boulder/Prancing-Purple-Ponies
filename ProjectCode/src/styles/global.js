@@ -8,8 +8,7 @@ export const globalStyles = StyleSheet.create({
     },
     listContainer:{
         //flex:1,
-        marginTop: 40,
-        height: 500,
+        marginTop: 20,
         width: '100%',
     },
     input: {
@@ -120,10 +119,16 @@ export const globalStyles = StyleSheet.create({
       marginBottom: 90,
       width: '100%',
     },
+    detailList: {
+      // adding padding between head and first card
+      // setting with to be 95%
+      paddingTop: 10,
+      marginBottom: 20,
+      width: '100%',
+    },
     informationFields: {
         // put spacing at very top
         paddingVertical: 5,
-
         // put the icon and information in one row
         flexDirection: 'row',
     },

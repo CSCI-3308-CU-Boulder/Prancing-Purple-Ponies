@@ -21,8 +21,6 @@ async function getEvents() {
         event.key = data.length.toString();
         data.push(event);
         my_events.push(event.data());
-        console.log("event here:");
-        console.log(event.data());
     });
 
     // console.log("EVENTS:");
@@ -49,10 +47,7 @@ class MainFeed extends Component {
     }
 
     setDetailOpen(visible, item) {
-        this.setState({detailOpen: visible});
-        // console.log("hey here it is:");
-        // console.log(item.data());
-        this.setState({selectedEvent: item.data()});
+        this.setState({detailOpen: visible, selectedEvent: item});
     }
 
     addSport(meetingInfo) {
@@ -88,11 +83,11 @@ class MainFeed extends Component {
                 </Async>
 
                 <Modal visible = {this.state.detailOpen} animationType = 'slide'>
-                    <View style={{alignItems: 'flex-start', marginVertical: 40}}>
+                    <View style={{alignItems: 'center', marginVertical: 10}}>
                         <Button
                             onPress={()=> this.setDetailOpen(false)}
                             title="Close"
-                            color="#841584"
+                            color="#CFB87C"
                             accessibilityLabel="Close the detail view using this button"
 
                         />
