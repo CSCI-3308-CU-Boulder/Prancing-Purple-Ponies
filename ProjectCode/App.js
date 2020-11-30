@@ -1,20 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, LogBox, Platform, StyleSheet, View} from 'react-native';
+import Async from 'react-async';
+import StartPage from "./src/views/StartPage";
+import MainFeed from "./src/views/MainFeed";
+import Navigation from "./src/utility/navigation";
+import {currentUser} from "./src/utility/database";
+
+
+const logo = {uri: "https://i.pinimg.com/474x/ee/d9/10/eed9106bd6077a92afd326edefd8d50b.jpg"};
+LogBox.ignoreLogs(["Setting a timer", "Require cycle", "Failed child context", "componentWillReceiveProps"]);
+
+
+async function getInitialScreen() {
+    await new Promise(r => setTimeout(r, 2000));
+    if (currentUser) {
+        // If the user is logged in, display the main feed straight away
+        return <Navigation startOn={MainFeed}/>;
+    } else {
+        // If the user is not logged in, display the start page
+        return <Navigation startOn={StartPage}/>;
+    }
+}
+
 
 export default function App() {
+
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <StatusBar style="auto" />
-      </View>
-);
+        <Async promiseFn={getInitialScreen}>
+            <Async.Loading>
+                {/* Display the logo while the app figures out if the user is logged in. */}
+                <View style={styles.container}>
+                    <Image
+                        source={logo}
+                        style={styles.logo}
+                        resizeMode="contain"
+                    >
+                    </Image>
+                </View>
+            </Async.Loading>
+            <Async.Resolved>
+                {/* Display the view returned by the getInitialScreen function. */}
+                {view => (
+                    view
+                )}
+            </Async.Resolved>
+        </Async>
+    )
+}
+
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+    logo:{
+        width: 280,
+        height: 300,
+        borderRadius: 80
     },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
