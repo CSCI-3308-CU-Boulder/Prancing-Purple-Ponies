@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import Async from 'react-async';
 import {Text, View, Image, FlatList, TouchableOpacity, Modal, Button} from 'react-native';
-import {forEachEntry, addEntry, currentUser} from "../utility/database";
+import {forEachEntry, addEntry, currentUser, db} from "../utility/database";
+import {globalStyles} from '../styles/global.js';
 
 // import the external styles sheet
-import styles from "../styles/mainFeed"
+// import styles from "../styles/mainFeed"
 
 let rsvpYesFormat = function(data) {
     // check if they've rsvp'd yes or maybe
@@ -120,61 +121,79 @@ function rsvp(rsvp_list, event_id) {
     })
 }
 
+var yesses = new Object();
+var maybes = new Object();
+
+function getFullNameYes(email) {
+  db.collection("user").where("email", "==", email)
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            var name = doc.data().name;
+            yesses[email] = name;
+            return name;
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+function getFullNameMaybe(email) {
+  db.collection("user").where("email", "==", email)
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            var name = doc.data().name;
+            maybes[email] = name;
+            return name;
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
 
 // export a function to render the card
 export default function Details(doc) {
 
-    // let doc = "";
     let data = doc.doc;
 
     var numYes = data.rsvp_yes.length;
     var numMaybe = data.rsvp_maybe.length;
-    var yesses = [numYes];
-    var maybes = [numMaybe];
 
     // store the names of the rsvps
     for(var i = 0; i < numYes; i++) {
-        yesses[i] = data.rsvp_yes[i].reference;
+        getFullNameYes(data.rsvp_yes[i].email);
     }
     for(var i = 0; i < numMaybe; i++) {
-        maybes[i] = data.rsvp_maybe[i].reference;
+        getFullNameMaybe(data.rsvp_maybe[i].email);
     }
-
-    // console.log("GOT HERE");
-    // console.log("Doc:");
-    // console.log(doc);
-    // console.log("Data:");
-    // console.log(data);
-    // console.log("Details:");
-    // console.log(data.location);
-    // console.log(data.sport);
-     console.log(data.rsvp_yes);
-     console.log(data.rsvp_maybe);
 
     renderItem = ({ item }) => {
       if (item.email != null) {
-        console.log("HEYYYYYY");
         return (
           <View>
-            <Text>
-              {item.email}
-            </Text>
+          <Text>
+            {item.email}
+          </Text>
           </View>
-        )
+        );
       }
     }
 
+
     // return the view
     return(
-        <View style={styles.modalContainer}>
+        <View style={globalStyles.container}>
 
             {/* hold info about time and place */}
-            <View style={styles.eventInfo}>
+            <View>
 
-              <Text> {data.sport} </Text>
+              <Text style={globalStyles.headerTitle}> {data.sport} </Text>
 
                 {/* Location of event */}
-                <View style={styles.informationFields} >
+                <View style={globalStyles.informationFields} >
                     <Image source={require('../../assets/images/event_location.png')} style={{marginRight: 5}}/>
 
                     <Text> {data.location} </Text>
@@ -182,7 +201,7 @@ export default function Details(doc) {
                 </View>
 
                 {/* Time of the event */}
-                <View style={styles.informationFields}>
+                <View style={globalStyles.informationFields}>
                     <Image source={require('../../assets/images/event_time.png')} style={{marginRight: 5}}/>
 
                     <Text> {data.time} </Text>
@@ -190,35 +209,23 @@ export default function Details(doc) {
                 </View>
             </View>
 
-            {/* Yes and Maybe Buttons */}
-            <View style={styles.rsvpCont}>
-
-                <TouchableOpacity style={rsvpYesFormat(data)} onPress={() => rsvp("yes", doc.id)}>
-                    <Text >YES!</Text>
-                </TouchableOpacity>
-
-                {/* RSVP Maybe Button */}
-                <TouchableOpacity style={rsvpMaybeFormat(data)} onPress={() => rsvp("maybe", doc.id)}>
-                    <Text>Maybe</Text>
-                </TouchableOpacity>
-
-            </View>
-
             {/* List of Yesses */}
+            <View style={globalStyles.listContainer}>
             <View>
-                <Text style={"fontWeight: 'bold', fontSize: 20"}> YES </Text>
-                <FlatList style={styles.list}
+                <Text style={globalStyles.listSectionTitle}>Who's playing?</Text>
+                <FlatList style={globalStyles.list}
                     data={data.rsvp_yes}
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => index.toString()}/>
             </View>
             {/* List to hold Maybes */}
             <View>
-                <Text style={"fontWeight: 'bold', fontSize: 20"}> Maybe </Text>
-                <FlatList style={styles.list}
+                <Text style={globalStyles.listSectionTitle}>Maybe</Text>
+                <FlatList style={globalStyles.list}
                     data={data.rsvp_maybe}
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => index.toString()}/>
+            </View>
             </View>
         </View>
     )

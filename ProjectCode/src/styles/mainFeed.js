@@ -33,7 +33,7 @@ export default StyleSheet.create({
         width: '95%',
       },
       evenButton: {
-        // positioning of the button 
+        // positioning of the button
         position: 'absolute',
         bottom: 90,
         padding: 20,
@@ -52,7 +52,7 @@ export default StyleSheet.create({
         borderTopWidth: 2,
         borderColor: '#B2B2B2',
         backgroundColor: 'white',
-        
+
         // alignment of contents
         alignItems: 'center',
         justifyContent: 'center',

@@ -4,7 +4,13 @@ export const globalStyles = StyleSheet.create({
     container:{
         flex:1,
         padding: 20,
-
+        width: '100%',
+    },
+    listContainer:{
+        //flex:1,
+        marginTop: 40,
+        height: 500,
+        width: '100%',
     },
     input: {
         borderWidth: 1,
@@ -13,7 +19,29 @@ export const globalStyles = StyleSheet.create({
         fontSize: 20,
         borderRadius: 6,
     },
+    header: {
+      // defining the dimensions of the header
+      width: '100%',
+      height: 80,
 
+      // add border to bottom of header
+      borderBottomWidth: 2,
+      borderColor: '#B2B2B2',
+
+      // aligning title in center and placing at the bottom of the View
+      alignItems: 'center',
+      justifyContent: 'flex-end'
+    },
+    headerTitle: {
+      // header styling
+      fontSize: 30,
+      fontWeight: 'bold',
+    },
+    listSectionTitle: {
+      // header styling
+      fontSize: 24,
+      fontWeight: 'bold',
+    },
     modalContainer: {
         width: '95%',
         height: '80%',
@@ -85,4 +113,24 @@ export const globalStyles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: '#fafcc2',
     },
+    list: {
+      // adding padding between head and first card
+      // setting with to be 95%
+      paddingTop: 10,
+      marginBottom: 90,
+      width: '100%',
+    },
+    informationFields: {
+        // put spacing at very top
+        paddingVertical: 5,
+
+        // put the icon and information in one row
+        flexDirection: 'row',
+    },
+    event_title: {
+        // special styling for the title of each event
+        fontSize: 20,
+        fontWeight: 'bold',
+        paddingBottom: 7,
+    }
 });
