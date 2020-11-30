@@ -6,9 +6,10 @@ import {forEachEntry, addEntry, currentUser} from "../utility/database";
 // import the external styles sheet
 import styles from "../styles/mainFeed"
 // import the event function from events
-import Event from '../utility/events'
+import Event, {eventIsInFuture} from '../utility/events'
 import CreateEvent from "./createEvent";
 import Details from "./eventDetails";
+import Profile from "./Profile";
 
 
 let my_events = [];
@@ -19,8 +20,11 @@ async function getEvents() {
     console.log("EVENTS:");
     await forEachEntry("event", (event) => {
         event.key = data.length.toString();
-        data.push(event);
-        my_events.push(event.data());
+        let event_data = event.data();
+
+        if (eventIsInFuture(event_data)) {
+            data.push(event);
+        }
     });
 
     // console.log("EVENTS:");
@@ -55,7 +59,12 @@ class MainFeed extends Component {
         addEntry("event", {
             sport: meetingInfo.sport,
             location: meetingInfo.location,
+            date: meetingInfo.date,
+            inform: meetingInfo.inform,
             time: meetingInfo.time,
+            hh: meetingInfo.hh,
+            mm: meetingInfo.mm,
+            ampm: meetingInfo.ampm,
             rsvp_yes: [{email: currentUser.data().email, reference: currentUser.ref}],
             rsvp_maybe: []
         });
@@ -99,9 +108,10 @@ class MainFeed extends Component {
                     <View style = {styles.container}>
                         <Button
                             onPress={()=> this.setModalOpen(false)}
-                            title="Close"
-                            color="#841584"
-                            accessibilityLabel="Close the event creater using this button"
+                            title="CANCEL"
+                            color="red"
+                            accessibilityLabel="Close the event creator using this button"
+
                         />
                         <CreateEvent addSport={this.addSport} closeModal={() => this.setModalOpen(false)}/>
                     </View>
@@ -120,7 +130,10 @@ class MainFeed extends Component {
 
                     <View style={{flexDirection: 'row'}}>
                         <Image style={styles.footerImg} source={require('../../assets/images/navbar_court_button.png')} />
-                        <Image style={styles.footerImg} source={require('../../assets/images/navbar_profile_button.png')} />
+                        <TouchableOpacity
+                            onPress={() => this.navigate.to(Profile)}>
+                            <Image style={styles.footerImg} source={require('../../assets/images/navbar_profile_button.png')} />
+                        </TouchableOpacity>
                     </View>
                 </View>
                 {/* <StatusBar style="auto" /> */}

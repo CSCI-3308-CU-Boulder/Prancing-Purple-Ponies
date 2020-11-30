@@ -12,9 +12,10 @@ export const globalStyles = StyleSheet.create({
         width: '100%',
     },
     input: {
+
         borderWidth: 1,
         borderColor: '#ddd',
-        padding: 20,
+        padding: 10,
         fontSize: 20,
         borderRadius: 6,
     },
@@ -137,5 +138,21 @@ export const globalStyles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         paddingBottom: 7,
-    }
+    },
+    bigFont: {
+        fontSize: 35,
+        color: 'grey',
+    },
+    guide:{
+        fontSize:20,
+        color: '#303030',
+    },
+    errorMsg:{
+        fontSize:13,
+        color: 'red',
+    },
+    row: {
+        flex: 1,
+        flexDirection: "row"
+    },
 });
