@@ -92,7 +92,7 @@ class MainFeed extends Component {
                 </Async>
 
                 <Modal visible = {this.state.detailOpen} animationType = 'slide'>
-                    <View style={{alignItems: 'center', marginVertical: 10}}>
+                    <View style={{alignItems: 'center', marginVertical: 30}}>
                         <Button
                             onPress={()=> this.setDetailOpen(false)}
                             title="Close"
