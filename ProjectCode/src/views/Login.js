@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import SignUp from "./SignUp";
 import MainFeed from "./MainFeed";
-import {auth} from "../utility/database"
+import {auth, setCurrentUser} from "../utility/database"
 
 class LogInComponent extends React.Component {
   constructor(props) {
@@ -29,7 +29,8 @@ class LogInComponent extends React.Component {
   {
     const { email, password } = this.state;
     let navigate = this.navigate;
-    auth.signInWithEmailAndPassword(email, password).then(function () {
+    auth.signInWithEmailAndPassword(email, password).then(async function () {
+      await setCurrentUser();
       navigate.to(MainFeed)
     }).catch(function(error) {
       // Handle Errors here.

@@ -13,10 +13,11 @@ import {
 } from 'react-native'
 import { ListItem, Avatar, ButtonGroup, Divider } from "react-native-elements";
 import EditProfile from "./EditProfile";
-import {currentUser, forEachEntry, updateCurrentUser} from "../utility/database";
+import {currentUser, forEachEntry, auth} from "../utility/database";
 import MainFeed from "./MainFeed";
 import Async from "react-async";
 import Event, {currentUserInRSVPMaybe, currentUserInRSVPYes, eventIsInFuture} from "../utility/events";
+import StartPage from "./StartPage";
 
 async function getEvents() {
   let data = [];
@@ -42,20 +43,10 @@ class ProfilePage extends React.Component {
   state = {
     email: '', username: '', password: '', confirm_password: ''
   }
-  onChangeText = (key, val) => {
-    this.setState({ [key]: val })
-  }
-  active = () =>
-  {
-    // alert("Navigate to Active RSVPs")
-  }
-  past = () =>
-  {
-    // alert("Navigate to Past RSVPs")
-  }
-  myEvents = () =>
-  {
-    // alert("Navigate to My Events")
+
+  signOut() {
+    auth.signOut();
+    this.navigate.to(StartPage);
   }
 
   render() {
@@ -95,6 +86,9 @@ class ProfilePage extends React.Component {
         </ListItem>
         <TouchableOpacity onPress={() => this.navigate.to(EditProfile)}>
           <Text style={styles.editProfileButton}>Edit Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.signOut()}>
+          <Text style={styles.signOutButton}>Sign Out</Text>
         </TouchableOpacity>
 
         <View style={styles.row}>
@@ -186,6 +180,17 @@ const styles = StyleSheet.create({
     fontSize:  15,
     width: 120,
     padding: 5,
+    marginLeft: 20
+  },
+  signOutButton: {
+    backgroundColor: '#CFB87C',
+    color: 'black',
+    borderRadius: 15,
+    textAlign: 'center',
+    fontSize:  15,
+    width: 120,
+    padding: 5,
+    marginTop: 10,
     marginLeft: 20
   },
   image: {
